@@ -1,0 +1,8 @@
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "MétéoFR",
+  "url": "https://meteofr-maquette.vercel.app/",
+  "inLanguage": "fr-FR",
+  "description": "Météo en direct, prévisions heure par heure, carte du matin et de l'après-midi pour chaque ville et village de France."
+}

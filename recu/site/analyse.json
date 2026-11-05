@@ -1,0 +1,133 @@
+{
+  "dossier": "/Users/paul/Downloads/meteofr-recu",
+  "date": "2026-11-05T14:28:56.341Z",
+  "detection": "Vision (macOS) + mesures sharp",
+  "planches": [
+    "planche.jpg"
+  ],
+  "legende_planche": "cadre jaune : sujet ; croix rouge : cadrage ; fond rose : à vérifier",
+  "doublons": [],
+  "images": [
+    {
+      "fichier": "meteofr.png",
+      "nom": "meteofr",
+      "drapeau": "autre",
+      "largeur": 1920,
+      "hauteur": 1080,
+      "ratio": "16:9",
+      "ratio_valeur": 1.778,
+      "orientation": "paysage",
+      "format": "png",
+      "poids": 651887,
+      "transparence": false,
+      "sujet": {
+        "x": 15.7,
+        "y": 45.2,
+        "l": 68.5,
+        "h": 52.7,
+        "source": "saillance"
+      },
+      "visages": 0,
+      "cadrage": [
+        45,
+        58
+      ],
+      "cadrage_css": "45% 58%",
+      "zones_calmes": [
+        {
+          "cote": "bas",
+          "score": 0.47,
+          "ton": "clair",
+          "recouvre_sujet": 0.64
+        },
+        {
+          "cote": "droite",
+          "score": 0.44,
+          "ton": "clair",
+          "recouvre_sujet": 0.32
+        },
+        {
+          "cote": "gauche",
+          "score": 0.37,
+          "ton": "clair",
+          "recouvre_sujet": 0.32
+        },
+        {
+          "cote": "haut",
+          "score": 0.24,
+          "ton": "clair",
+          "recouvre_sujet": 0
+        }
+      ],
+      "qualite": {
+        "nettete": 59.6,
+        "bruit": 0.56,
+        "compression": 1,
+        "faible": false,
+        "raisons": []
+      },
+      "lisible": {
+        "niveau": "document",
+        "a_verifier": true,
+        "texte": "4O ° MétéoFR · ? meteo de Vos communes · Rechercher une ville, un Village... · ® Prévisions météo · MétéoFR > Prévisions Francel · Vigilance jaune · € Vagues-su",
+        "blocs": 74,
+        "surface": 4.8,
+        "details": [
+          {
+            "texte": "4O ° MétéoFR",
+            "niveau": "marque"
+          },
+          {
+            "texte": "? meteo de Vos communes",
+            "niveau": "decoratif"
+          },
+          {
+            "texte": "Rechercher une ville, un Village...",
+            "niveau": "decoratif"
+          },
+          {
+            "texte": "® Prévisions météo",
+            "niveau": "marque"
+          },
+          {
+            "texte": "MétéoFR > Prévisions Francel",
+            "niveau": "marque"
+          },
+          {
+            "texte": "Vigilance jaune",
+            "niveau": "decoratif"
+          },
+          {
+            "texte": "€ Vagues-submersion (jaune)",
+            "niveau": "decoratif"
+          },
+          {
+            "texte": "Alpes-Maritimes (06) - littoral",
+            "niveau": "decoratif"
+          },
+          {
+            "texte": "# Vent violent (jaune) |",
+            "niveau": "decoratif"
+          },
+          {
+            "texte": "Var (83), Alpes-Maritimes (06), Haute-Savoie (74), Ain (O1) |",
+            "niveau": "decoratif"
+          },
+          {
+            "texte": "PRÉVISIONS",
+            "niveau": "decoratif"
+          },
+          {
+            "texte": "Météo en France",
+            "niveau": "decoratif"
+          }
+        ]
+      },
+      "empreinte": "26262972262c2c24",
+      "drapeaux": [
+        "autre",
+        "document lisible"
+      ]
+    }
+  ]
+}

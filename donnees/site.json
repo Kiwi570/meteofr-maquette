@@ -1,0 +1,41 @@
+{
+  "nom": "MétéoFR",
+  "adresse": "https://meteofr-maquette.vercel.app",
+  "siteActuel": "meteofr.lovable.app",
+  "version": 1,
+  "langues": [
+    "fr"
+  ],
+  "navigation": [
+    "accueil",
+    "commune",
+    "radar",
+    "vigilance",
+    "application",
+    "contact"
+  ],
+  "actionEntete": {
+    "page": "application",
+    "ancre": "installer"
+  },
+  "couleurs": {
+    "fond": "#f4f7fc",
+    "texte": "#0b1f45",
+    "voile": "#0d2f6d",
+    "ouverture": "#0a1a3a",
+    "menu": "#f4f7fc",
+    "theme": "#0d2f6d"
+  },
+  "contact": {
+    "email": "À compléter",
+    "adresse": "Coordonnées à compléter"
+  },
+  "polices": [
+    "/assets/fonts/outfit-latin-600-normal.woff2",
+    "/assets/fonts/outfit-latin-200-normal.woff2",
+    "/assets/fonts/dm-sans-latin-400-normal.woff2",
+    "/assets/fonts/dm-sans-latin-500-normal.woff2"
+  ],
+  "imagePartage": "grok/ciel-clair-1168.webp",
+  "curseur": false
+}

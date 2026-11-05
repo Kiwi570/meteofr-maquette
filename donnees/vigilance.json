@@ -1,0 +1,20 @@
+{
+  "_note": "Relevé de la vigilance affichée sur le site actuel le 5 novembre 2026 à 15 h 20 (source indiquée : Météo-France). Données de démonstration figées : la maquette ne les met pas à jour.",
+  "releve": "2026-11-05T15:20",
+  "jours": {
+    "aujourdhui": [
+      ["orange", "pluie-inondation", ["2A", "30", "2B", "34"]],
+      ["jaune", "pluie-inondation", ["07", "83", "06", "13"]],
+      ["jaune", "orages", ["83", "2A", "30", "13", "2B", "34"]],
+      ["jaune", "crues", ["30", "2B", "34"]]
+    ],
+    "demain": [
+      ["orange", "pluie-inondation", ["2A", "2B"]],
+      ["jaune", "pluie-inondation", ["83", "06", "30", "13", "34"]],
+      ["jaune", "orages", ["2A", "30", "13", "2B", "34"]],
+      ["jaune", "crues", ["30", "2B", "34"]]
+    ]
+  },
+  "phenomenes": { "pluie-inondation": "Pluie-inondation", "orages": "Orages", "crues": "Crues" },
+  "niveaux": { "vert": 0, "jaune": 1, "orange": 2, "rouge": 3 }
+}

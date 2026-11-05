@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="fr" data-v="1" data-page="application">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>L&#39;application MétéoFR pour Android · MétéoFR</title>
+<meta name="description" content="MétéoFR dans votre poche : recherche de commune, direct, radar et vigilance. Installation de l&#39;APK pas à pas.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://meteofr-maquette.vercel.app/application">
+<style>:root{--fond:#f4f7fc;--texte:#0b1f45;--voile-fond:#0d2f6d;--ouverture-fond:#0a1a3a;--menu-fond:#f4f7fc}:root { --entete-h: 72px; --barres-h: 0px; } html { background: var(--fond); color: var(--texte); scrollbar-gutter: stable; } body { margin: 0; background: var(--fond); } html.js:not(.calme):not(.secours):not([data-arrivee="retour"]) [data-anime] { opacity: 0; } html.js:not(.calme):not(.secours):not([data-arrivee="retour"]) [data-anime].vu { opacity: 1; } [data-voile] { position: fixed; inset: 0; z-index: 900; background: var(--voile-fond); transform: translateY(100%); visibility: hidden; pointer-events: none; } html[data-arrivee="voile"]:not(.voile-leve):not(.calme):not(.secours) [data-voile] { transform: none; visibility: visible; } html.calme [data-voile], html.secours [data-voile] { visibility: hidden !important; } .ouverture-panneau { position: fixed; inset: 0; z-index: 850; display: none; place-content: center; justify-items: center; background: var(--ouverture-fond, var(--voile-fond)); color: var(--fond); text-align: center; } html.js[data-arrivee="intro"]:not(.calme):not(.secours):not(.intro-finie) .ouverture-panneau { display: grid; } html.defilement-bloque, html.defilement-bloque body, html.js[data-arrivee="intro"]:not(.calme):not(.secours):not(.intro-finie), html.js[data-arrivee="intro"]:not(.calme):not(.secours):not(.intro-finie) body, html[data-arrivee="voile"]:not(.voile-leve):not(.calme):not(.secours), html[data-arrivee="voile"]:not(.voile-leve):not(.calme):not(.secours) body { overflow: hidden; } html.js[data-arrivee="intro"]:not(.calme):not(.secours):not(.intro-finie) { background-color: var(--ouverture-fond, var(--voile-fond)); } html[data-arrivee="voile"]:not(.voile-leve):not(.calme):not(.secours) { background-color: var(--voile-fond); }</style>
+<script>(function () {
+var d = document.documentElement, ss = null, ls = null;
+try { ss = window.sessionStorage; ls = window.localStorage; } catch (e) {}
+d.classList.add('js');
+var calme = false;
+try { calme = !!ls && ls.getItem('socle:calme') === 'oui'; } catch (e) {}
+if (!calme && window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) calme = true;
+if (calme) d.classList.add('calme');
+var nav = performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+var type = nav ? nav.type : 'navigate';
+var depart = null;
+try { depart = JSON.parse(ss.getItem('socle:depart') || 'null'); ss.removeItem('socle:depart'); } catch (e) {}
+if (depart && !(Date.now() - depart.t < 15000)) depart = null;
+var retourSection = false;
+try { retourSection = !!ss.getItem('socle:calme-retour'); } catch (e) {}
+var mode = type === 'back_forward' || retourSection ? 'retour' : type === 'reload' ? 'intro' : depart ? 'voile' : 'intro';
+d.setAttribute('data-arrivee', mode);
+if (mode === 'voile' && depart.couleur) d.style.setProperty('--voile-fond', depart.couleur);
+if (type === 'reload' && 'scrollRestoration' in history) {
+if (!retourSection) history.scrollRestoration = 'manual';
+}
+try {
+var choisie = ls && ls.getItem('socle:langue');
+var langue = (d.lang || '').slice(0, 2);
+if (choisie && choisie !== langue && type === 'navigate' && !depart) {
+var alt = document.querySelector('link[rel="alternate"][hreflang="' + choisie + '"]');
+if (alt) location.replace(new URL(alt.href).pathname + location.search + location.hash);
+}
+} catch (e) {}
+setTimeout(function () { if (!d.classList.contains('demarre')) d.classList.add('secours'); }, 2000);
+})();</script>
+<link rel="preload" href="/assets/fonts/outfit-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/outfit-latin-200-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/dm-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/dm-sans-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/socle.css?v=1">
+<link rel="stylesheet" href="/assets/css/site.css?v=1">
+<link rel="modulepreload" href="/assets/js/site.js?v=1">
+<link rel="modulepreload" href="/assets/js/socle/index.js?v=1">
+<link rel="preconnect" href="https://api.open-meteo.com" crossorigin>
+<script src="/assets/vendor/gsap.min.js" defer></script>
+<script src="/assets/vendor/ScrollTrigger.min.js" defer></script>
+<script src="/assets/vendor/SplitText.min.js" defer></script>
+<script type="module" src="/assets/js/site.js?v=1"></script>
+<meta name="theme-color" content="#0d2f6d">
+<link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MétéoFR">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="L&#39;application MétéoFR pour Android · MétéoFR">
+<meta property="og:description" content="MétéoFR dans votre poche : recherche de commune, direct, radar et vigilance. Installation de l&#39;APK pas à pas.">
+<meta property="og:url" content="https://meteofr-maquette.vercel.app/application">
+<meta property="og:image" content="https://meteofr-maquette.vercel.app/assets/partage/application-fr.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="L&#39;application MétéoFR au-dessus d&#39;une mer de nuages">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"MétéoFR","url":"https://meteofr-maquette.vercel.app/","inLanguage":"fr-FR","description":"Météo en direct, prévisions heure par heure, carte du matin et de l'après-midi pour chaque ville et village de France."}</script>
+</head>
+<body id="haut">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="i-soleil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2m-7.07-17.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol><symbol id="i-lune" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol><symbol id="i-nuage" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></symbol><symbol id="i-eclaircies" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2m-7.07.93 1.41 1.41M20 12h2m-2.93-7.07-1.41 1.41M15.947 12.65a4 4 0 0 0-5.925-4.128M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/></symbol><symbol id="i-eclaircies-nuit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.188 8.5A6 6 0 0 1 16 4a1 1 0 0 0 6 6 6 6 0 0 1-3 5.197M13 16a3 3 0 1 1 0 6H7a5 5 0 1 1 4.9-6Z"/></symbol><symbol id="i-pluie" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242M16 14v6M8 14v6M12 16v6"/></symbol><symbol id="i-bruine" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242M8 19v1M8 14v1M16 19v1M16 14v1M12 21v1M12 16v1"/></symbol><symbol id="i-averses" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2m-7.07.93 1.41 1.41M20 12h2m-2.93-7.07-1.41 1.41M15.947 12.65a4 4 0 0 0-5.925-4.128M3 20a5 5 0 1 1 8.9-4H13a3 3 0 0 1 2 5.24M11 20v2M7 19v2"/></symbol><symbol id="i-neige" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242M8 15h.01M8 19h.01M12 17h.01M12 21h.01M16 15h.01M16 19h.01"/></symbol><symbol id="i-orage" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16.326A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 .5 8.973m-4-4.973-3 5h4l-3 5"/></symbol><symbol id="i-brouillard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242M16 17H7m10 4H9"/></symbol><symbol id="i-vent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.8 19.6A2 2 0 1 0 14 16H2m15.5-8a2.5 2.5 0 1 1 2 4H2m7.8-7.6A2 2 0 1 1 11 8H2"/></symbol><symbol id="i-goutte" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></symbol><symbol id="i-loupe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.34-4.34"/></symbol><symbol id="i-cible" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3m14 0h3M12 2v3m0 14v3"/><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-fleche" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></symbol><symbol id="i-telecharger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m9 12v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5 5 5 5-5"/></symbol><symbol id="i-etoile" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></symbol><symbol id="i-lecture" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></symbol><symbol id="i-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4v16M16 4v16"/></symbol><symbol id="i-alerte" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.268 21a2 2 0 0 0 3.464 0M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></symbol></defs></svg>
+<div data-voile data-effet="front" aria-hidden="true"><svg class="front front--haut" viewBox="0 0 1200 28" preserveAspectRatio="none" aria-hidden="true"><path d="M0 26H1200" stroke="#8cc0ff" stroke-width="3" fill="none"/><path d="M22 26L37 4L52 26Z" fill="#8cc0ff"/><path d="M97 26L112 4L127 26Z" fill="#8cc0ff"/><path d="M172 26L187 4L202 26Z" fill="#8cc0ff"/><path d="M247 26L262 4L277 26Z" fill="#8cc0ff"/><path d="M322 26L337 4L352 26Z" fill="#8cc0ff"/><path d="M397 26L412 4L427 26Z" fill="#8cc0ff"/><path d="M472 26L487 4L502 26Z" fill="#8cc0ff"/><path d="M547 26L562 4L577 26Z" fill="#8cc0ff"/><path d="M622 26L637 4L652 26Z" fill="#8cc0ff"/><path d="M697 26L712 4L727 26Z" fill="#8cc0ff"/><path d="M772 26L787 4L802 26Z" fill="#8cc0ff"/><path d="M847 26L862 4L877 26Z" fill="#8cc0ff"/><path d="M922 26L937 4L952 26Z" fill="#8cc0ff"/><path d="M997 26L1012 4L1027 26Z" fill="#8cc0ff"/><path d="M1072 26L1087 4L1102 26Z" fill="#8cc0ff"/><path d="M1147 26L1162 4L1177 26Z" fill="#8cc0ff"/></svg><svg class="front front--bas" viewBox="0 0 1200 28" preserveAspectRatio="none" aria-hidden="true"><path d="M0 2H1200" stroke="#8cc0ff" stroke-width="3" fill="none"/><path d="M22 2L37 24L52 2Z" fill="#8cc0ff"/><path d="M97 2L112 24L127 2Z" fill="#8cc0ff"/><path d="M172 2L187 24L202 2Z" fill="#8cc0ff"/><path d="M247 2L262 24L277 2Z" fill="#8cc0ff"/><path d="M322 2L337 24L352 2Z" fill="#8cc0ff"/><path d="M397 2L412 24L427 2Z" fill="#8cc0ff"/><path d="M472 2L487 24L502 2Z" fill="#8cc0ff"/><path d="M547 2L562 24L577 2Z" fill="#8cc0ff"/><path d="M622 2L637 24L652 2Z" fill="#8cc0ff"/><path d="M697 2L712 24L727 2Z" fill="#8cc0ff"/><path d="M772 2L787 24L802 2Z" fill="#8cc0ff"/><path d="M847 2L862 24L877 2Z" fill="#8cc0ff"/><path d="M922 2L937 24L952 2Z" fill="#8cc0ff"/><path d="M997 2L1012 24L1027 2Z" fill="#8cc0ff"/><path d="M1072 2L1087 24L1102 2Z" fill="#8cc0ff"/><path d="M1147 2L1162 24L1177 2Z" fill="#8cc0ff"/></svg><div class="voile-contenu"><img src="/assets/images/logo-clair.svg" alt="" width="56" height="56"><span data-voile-libelle>Application</span></div></div>
+<div class="ouverture-panneau" data-ouverture data-effet="jour-qui-se-leve" aria-hidden="true">
+  <div class="intro-ciel"></div>
+  <div class="intro-centre">
+    <svg class="intro-soleil" viewBox="0 0 120 120" aria-hidden="true"><circle class="intro-disque" cx="60" cy="60" r="20"/><g class="intro-rayons"><path d="M60 14v14M60 92v14M14 60h14M92 60h14M27.5 27.5l9.9 9.9M82.6 82.6l9.9 9.9M27.5 92.5l9.9-9.9M82.6 37.4l9.9-9.9"/></g></svg>
+    <p class="intro-heure" data-intro-heure>00:00</p>
+    <p class="intro-ligne">MétéoFR · La météo de vos communes</p>
+  </div>
+</div>
+<a class="evitement" href="#contenu">Aller au contenu</a>
+<header data-entete>
+  <div class="entete-rangee">
+    <a class="entete-logo" href="/" data-libelle="Accueil">
+      <img src="/assets/images/logo.svg" alt="" width="36" height="36"><span>MétéoFR</span>
+    </a>
+    <nav data-nav aria-label="Navigation principale">
+      <ul><li><a href="/commune" data-libelle="Ma commune">Ma commune</a></li><li><a href="/radar" data-libelle="Radar &amp; carte">Radar &amp; carte</a></li><li><a href="/vigilance" data-libelle="Vigilance">Vigilance</a></li><li><a href="/application" data-libelle="Application" aria-current="page">Application</a></li><li><a href="/contact" data-libelle="Contact">Contact</a></li></ul>
+    </nav>
+    <div class="entete-actions">
+      <a class="bouton bouton--soleil" href="/application#installer" data-libelle="Application"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-telecharger"/></svg>L&#39;appli</a>
+      <button type="button" data-menu-bouton aria-controls="menu" aria-expanded="false" data-libelle-ouvrir="Menu" data-libelle-fermer="Fermer"><span data-libelle-bouton>Menu</span></button>
+    </div>
+  </div>
+</header>
+<div id="menu" data-menu role="dialog" aria-modal="true" aria-label="Menu">
+  <ul><li style="--i:0"><a href="/" class="menu-lien" data-libelle="Accueil">Accueil</a></li><li style="--i:1"><a href="/commune" class="menu-lien" data-libelle="Ma commune">Ma commune</a></li><li style="--i:2"><a href="/radar" class="menu-lien" data-libelle="Radar &amp; carte">Radar &amp; carte</a></li><li style="--i:3"><a href="/vigilance" class="menu-lien" data-libelle="Vigilance">Vigilance</a></li><li style="--i:4"><a href="/application" class="menu-lien" data-libelle="Application" aria-current="page">Application</a></li><li style="--i:5"><a href="/contact" class="menu-lien" data-libelle="Contact">Contact</a></li></ul>
+  <p><a href="/commune#recherche" class="bouton" data-libelle="Ma commune"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-loupe"/></svg>Chercher une commune</a></p>
+  <p><button type="button" class="lien" data-calme-bascule data-libelle-reduire="Réduire les animations" data-libelle-retablir="Rétablir les animations" data-libelle-systeme="Animations réduites par le réglage de votre appareil"><span data-libelle-bouton>Réduire les animations</span></button></p>
+</div>
+<main id="contenu" tabindex="-1">
+<section class="emergence" id="debut" data-emergence>
+  <figure class="media emergence-fond" data-grok style="--cadrage:50% 62%">
+  <picture><source media="(max-width: 760px) and (orientation: portrait)" srcset="/assets/images/grok/mer-de-nuages-mobile-480.webp 480w, /assets/images/grok/mer-de-nuages-mobile-784.webp 784w, /assets/images/grok/mer-de-nuages-mobile-1080.webp 1080w" sizes="100vw">
+    <img src="/assets/images/grok/mer-de-nuages-1600.webp" srcset="/assets/images/grok/mer-de-nuages-640.webp 640w, /assets/images/grok/mer-de-nuages-1168.webp 1168w, /assets/images/grok/mer-de-nuages-1600.webp 1600w" sizes="100vw" alt="" width="1600" height="1074" fetchpriority="high" loading="eager" decoding="async">
+  </picture><figcaption class="mention-ia">Illustration générée</figcaption>
+</figure>
+  <div class="conteneur emergence-contenu">
+    <p class="surtitre surtitre--clair" data-anime="gsap">Application Android</p>
+    <h1 class="emergence-titre" data-anime="gsap">MétéoFR dans votre poche</h1>
+    <p class="emergence-texte" data-anime="gsap">La météo de votre commune, le radar et la vigilance, toujours sous la main.</p>
+    <p class="actions emergence-actions" data-anime="gsap"><a href="/application#installer" class="bouton bouton--soleil" data-libelle="Application" data-action-principale><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-telecharger"/></svg>Installer l&#39;appli Android</a> <a href="/application#fonctions" class="bouton bouton--sombre" data-libelle="Application">Voir les fonctions</a></p>
+    <p class="emergence-info" data-info-cle data-anime="gsap">Android (fichier APK) · iPhone : à compléter · version et taille : à compléter</p>
+  </div>
+  <div class="emergence-scene" data-effet="emergence" aria-hidden="true">
+    <div class="telephone telephone--emergence" data-telephone-emergence>
+      <div class="telephone-ecran" data-ecran-etat="nuageux">
+        <div class="ecran-app est-active"><p class="ea-lieu">Paris</p><p class="ea-temp" data-m="t">11°</p><p class="ea-lib"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-nuage"/></svg> <span data-m="libelle">Couvert</span></p></div>
+      </div>
+    </div>
+    <div class="emergence-brume"></div>
+  </div>
+</section>
+<section class="fonctions conteneur" id="fonctions">
+  <div class="tete-section">
+    <p class="surtitre">Fonctions</p>
+    <h2 data-anime="lignes">Tout ce que fait l&#39;appli</h2>
+  </div>
+  <ul class="fonctions-grille" data-anime="cascade" data-effet="fonctions" data-visuel>
+    <li class="fonction" data-survol="incline"><span class="fonction-ico"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-loupe"/></svg></span><h3>Toutes les communes</h3><p>Ville ou village, partout en France.</p></li><li class="fonction" data-survol="incline"><span class="fonction-ico"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-soleil"/></svg></span><h3>Le direct</h3><p>Température, ressenti, vent et rafales.</p></li><li class="fonction" data-survol="incline"><span class="fonction-ico"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-pluie"/></svg></span><h3>Le radar</h3><p>Les images des deux dernières heures.</p></li><li class="fonction" data-survol="incline"><span class="fonction-ico"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-alerte"/></svg></span><h3>Vigilance et annonces</h3><p>Les départements concernés, et les annonces dans la cloche.</p></li><li class="fonction" data-survol="incline"><span class="fonction-ico"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-etoile"/></svg></span><h3>Favoris</h3><p>Vos communes, en un geste (avec un compte).</p></li><li class="fonction" data-survol="incline"><span class="fonction-ico"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-vent"/></svg></span><h3>Seize jours</h3><p>Matin et après-midi, jour par jour.</p></li>
+  </ul>
+</section>
+<section class="installer" id="installer">
+  <div class="conteneur installer-grille">
+    <div>
+      <p class="surtitre">Installation</p>
+      <h2 data-anime="lignes">Installer l&#39;APK en quatre étapes</h2>
+      <ol class="etapes-install" data-effet="etapes-install">
+        <svg class="etapes-fil" viewBox="0 0 4 400" preserveAspectRatio="none" aria-hidden="true" data-fx="trace"><path d="M2 0 V400" stroke="currentColor" stroke-width="4" fill="none" vector-effect="non-scaling-stroke"/></svg>
+        <li data-anime><span class="etape-pastille">1</span><div><h3>Télécharger le fichier</h3><p>Depuis votre téléphone Android, téléchargez le fichier APK de MétéoFR.</p></div></li><li data-anime><span class="etape-pastille">2</span><div><h3>Autoriser l&#39;installation</h3><p>Si Android le demande, autorisez votre navigateur à installer des applications.</p></div></li><li data-anime><span class="etape-pastille">3</span><div><h3>Ouvrir le fichier</h3><p>Ouvrez le fichier téléchargé, puis confirmez l&#39;installation.</p></div></li><li data-anime><span class="etape-pastille">4</span><div><h3>Lancer MétéoFR</h3><p>Ouvrez l&#39;appli et cherchez votre commune.</p></div></li>
+      </ol>
+      <p class="note-demo">Version, taille et empreinte du fichier : à compléter par MétéoFR.</p>
+      <p class="apk-brancher"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-telecharger"/></svg><span>Lien de téléchargement de l&#39;APK : à brancher par MétéoFR (le fichier est aujourd&#39;hui sur le site actuel).</span></p>
+    </div>
+    <figure class="media installer-photo" data-grok data-fx="parallaxe" style="--cadrage:60% 60%">
+  <picture>
+    <img src="/assets/images/grok/telephone-table-1168.webp" srcset="/assets/images/grok/telephone-table-640.webp 640w, /assets/images/grok/telephone-table-1168.webp 1168w" sizes="(max-width: 860px) 100vw, 42vw" alt="Téléphone posé sur une table, près d&#39;une fenêtre mouillée" width="1168" height="784" loading="lazy" decoding="async">
+  </picture><figcaption class="mention-ia">Illustration générée</figcaption>
+</figure>
+  </div>
+</section>
+<section class="faq-appli conteneur" id="faq">
+  <svg class="faq-ondes" viewBox="0 0 200 200" aria-hidden="true" data-fx="trace"><rect x="62" y="20" width="76" height="160" rx="16" fill="none" stroke="currentColor" stroke-width="3"/><path d="M88 34h24" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M80 120c10-30 30-30 40 0" fill="none" stroke="currentColor" stroke-width="3"/></svg>
+  <div>
+    <p class="surtitre">Questions</p>
+    <h2 data-anime="lignes">Avant d&#39;installer</h2>
+    <details class="faq-item" data-anime><summary>L&#39;appli existe-t-elle sur iPhone ?</summary><p>À compléter par MétéoFR.</p></details><details class="faq-item" data-anime><summary>Est-elle gratuite ?</summary><p>À compléter par MétéoFR.</p></details><details class="faq-item" data-anime><summary>D&#39;où viennent les données ?</summary><p>Prévisions d&#39;Open-Meteo, vigilance de Météo-France, images radar de RainViewer.</p></details><details class="faq-item" data-anime><summary>Pourquoi un fichier APK plutôt qu&#39;un magasin d&#39;applications ?</summary><p>À compléter par MétéoFR.</p></details>
+    <p class="actions"><a href="/contact" class="bouton" data-libelle="Contact" data-survol="magnetique">Poser une autre question</a></p>
+  </div>
+</section>
+</main>
+<footer class="pied" id="pied">
+  <div class="conteneur pied-grille">
+    <div class="pied-marque">
+      <p class="pied-logo"><img src="/assets/images/logo.svg" alt="" width="40" height="40"><strong>MétéoFR</strong></p>
+      <p>La météo de vos communes</p>
+      <p class="pied-independant">Service indépendant, non affilié à Météo-France.</p>
+    </div>
+    <nav aria-label="Sommaire">
+      <p><strong>Sommaire</strong></p>
+      <ul><li><a href="/" data-libelle="Accueil">Accueil</a></li><li><a href="/commune" data-libelle="Ma commune">Ma commune</a></li><li><a href="/radar" data-libelle="Radar &amp; carte">Radar &amp; carte</a></li><li><a href="/vigilance" data-libelle="Vigilance">Vigilance</a></li><li><a href="/application" data-libelle="Application" aria-current="page">Application</a></li><li><a href="/contact" data-libelle="Contact">Contact</a></li></ul>
+    </nav>
+    <div>
+      <p><strong>Sources des données</strong></p>
+      <ul class="pied-sources">
+        <li>Prévisions : Open-Meteo (CC BY 4.0)</li>
+        <li>Vigilance : Météo-France</li>
+        <li>Radar de pluie : RainViewer</li>
+        <li>Contours des départements : IGN (Licence Ouverte)</li>
+      </ul>
+    </div>
+    <div>
+      <p><strong>Confort</strong></p>
+      <ul>
+        <li><button type="button" class="lien" data-calme-bascule data-libelle-reduire="Réduire les animations" data-libelle-retablir="Rétablir les animations" data-libelle-systeme="Animations réduites par le réglage de votre appareil"><span data-libelle-bouton>Réduire les animations</span></button></li>
+        <li><a href="#haut" data-sans-transition>Retour en haut</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="conteneur pied-bas">
+    <p>Maquette : les informations marquées « à compléter » seront fournies par MétéoFR.</p>
+    <p>Mentions légales (à compléter) · Politique de confidentialité (à compléter) · © MétéoFR</p>
+  </div>
+</footer>
+<div data-barre-fixe>
+  <a href="/commune#recherche" class="bouton bouton--contour" data-libelle="Ma commune"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-loupe"/></svg>Ma commune</a>
+  <a href="/radar" class="bouton" data-libelle="Radar &amp; carte"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-pluie"/></svg>Radar</a>
+</div>
+<script type="application/json" id="donnees-meteo">{"codes":{"0":["Ciel dégagé","soleil","clair"],"1":["Plutôt dégagé","soleil","clair"],"2":["Éclaircies","eclaircies","nuageux"],"3":["Couvert","nuage","nuageux"],"45":["Brouillard","brouillard","brouillard"],"48":["Brouillard givrant","brouillard","brouillard"],"51":["Bruine légère","bruine","pluie"],"53":["Bruine","bruine","pluie"],"55":["Bruine dense","bruine","pluie"],"56":["Bruine verglaçante","bruine","pluie"],"57":["Bruine verglaçante","bruine","pluie"],"61":["Pluie faible","pluie","pluie"],"63":["Pluie","pluie","pluie"],"65":["Pluie forte","pluie","pluie"],"66":["Pluie verglaçante","pluie","pluie"],"67":["Pluie verglaçante","pluie","pluie"],"71":["Neige faible","neige","neige"],"73":["Neige","neige","neige"],"75":["Neige forte","neige","neige"],"77":["Grains de neige","neige","neige"],"80":["Averses","averses","pluie"],"81":["Averses","averses","pluie"],"82":["Averses violentes","averses","pluie"],"85":["Averses de neige","neige","neige"],"86":["Averses de neige","neige","neige"],"95":["Orage","orage","orage"],"96":["Orage et grêle","orage","orage"],"99":["Orage et grêle","orage","orage"],"_note":"Codes météo WMO utilisés par Open-Meteo : libellé, pictogramme et état du ciel (photo et calque animé)."},"releve":{"_note":"Relevé réel Open-Meteo du 5 novembre 2026 à 15 h 30 (heure de Paris), utilisé hors ligne et sans JavaScript. Tableaux : maintenant = [t, ressenti, humidité %, jour, pluie mm, code, nuages %, pression hPa, vent km/h, direction °, rafales km/h] ; heures = [heure, t, proba pluie %, pluie mm, code, jour, rafales] ; jours = [date, code, tmin, tmax, pluie mm, proba %, lever, coucher, [t 9 h, code], [t 15 h, code]] ; villes = [nom, département, lat, lon, t, code, jour, [t 9 h, code], [t 15 h, code]].","maj":"2026-11-05T15:30","lieu":["Paris","75",48.8534,2.3488],"maintenant":[11.3,8.9,61,1,0,3,62,1022,7,81,16],"heures":[["15",11.1,3,0,2,1,17],["16",11.5,0,0,3,1,16],["17",11.4,0,0,3,1,19],["18",11.2,5,0,3,0,17],["19",10.6,5,0,3,0,14],["20",9.9,10,0,3,0,12],["21",9.4,45,0,3,0,10],["22",9.2,43,0,3,0,9],["23",9,18,0,3,0,7],["00",8.9,10,0,3,0,6],["01",8.8,8,0,3,0,4],["02",8.8,3,0,3,0,4],["03",8.5,3,0,2,0,5],["04",8.1,3,0,3,0,4],["05",7.8,8,0,3,0,5],["06",7.3,5,0,3,0,5],["07",7.2,8,0,3,0,5],["08",7,3,0,3,1,5],["09",7.3,3,0,3,1,6],["10",8.1,3,0,3,1,7],["11",9.2,0,0,3,1,8],["12",10.5,0,0,3,1,9],["13",11.5,0,0,3,1,12],["14",12.4,0,0,3,1,11],["15",12.8,0,0,3,1,11]],"jours":[["2026-11-05",3,5.1,11.5,0,45,"07:43","17:24",[5,3],[11,2]],["2026-11-06",3,7,12.9,0,10,"07:45","17:22",[7,3],[13,3]],["2026-11-07",45,5.8,8.2,0,0,"07:46","17:21",[7,3],[8,3]],["2026-11-08",45,5.6,8.1,0,0,"07:48","17:19",[6,3],[8,3]],["2026-11-09",61,5.5,12.6,3.6,53,"07:50","17:18",[8,61],[11,3]],["2026-11-10",80,12.6,17.6,9.6,71,"07:51","17:16",[14,3],[17,3]],["2026-11-11",3,12.9,18.5,0.5,54,"07:53","17:15",[14,3],[18,3]],["2026-11-12",80,11.6,15.6,5.6,43,"07:54","17:14",[14,3],[15,3]],["2026-11-13",80,3.7,14.1,15.8,37,"07:56","17:12",[11,53],[9,80]],["2026-11-14",1,1.8,8.9,0,22,"07:57","17:11",[5,0],[8,1]],["2026-11-15",1,0.2,7.2,0,17,"07:59","17:10",[2,1],[7,1]],["2026-11-16",3,-0.2,7.2,0,16,"08:01","17:09",[2,3],[7,3]],["2026-11-17",3,5.8,11.5,0,21,"08:02","17:08",[9,3],[11,3]],["2026-11-18",51,7.9,12.8,1.8,35,"08:04","17:06",[11,51],[11,51]],["2026-11-19",51,7.1,11.8,0.4,28,"08:05","17:05",[9,2],[11,3]],["2026-11-20",53,9.1,13.5,0.8,null,"08:07","17:04",[9,3],[12,3]]],"villes":[["Paris","75",48.8534,2.3488,11.3,3,1,[5,3],[11,2]],["Lille","59",50.633,3.0586,9.6,0,1,[3,0],[10,0]],["Strasbourg","67",48.5839,7.7455,10.3,1,1,[2,1],[10,2]],["Metz","57",49.1193,6.1757,11.2,0,1,[4,1],[11,1]],["Caen","14",49.1829,-0.3707,10.7,2,1,[7,3],[11,2]],["Rennes","35",48.1173,-1.6778,10.8,3,1,[4,3],[11,3]],["Brest","29",48.3904,-4.4861,12.2,0,1,[8,1],[13,0]],["Nantes","44",47.2184,-1.5536,10.6,3,1,[5,0],[10,3]],["Tours","37",47.3936,0.6848,11.7,2,1,[5,2],[12,3]],["Dijon","21",47.322,5.0415,11.2,2,1,[4,61],[11,2]],["Limoges","87",45.8336,1.2611,12.4,2,1,[8,2],[12,1]],["Clermont-Ferrand","63",45.7797,3.0863,10.4,3,1,[6,80],[10,80]],["Lyon","69",45.7485,4.8467,10.2,61,1,[6,51],[10,61]],["Grenoble","38",45.1885,5.7245,15.3,3,1,[8,2],[16,2]],["Bordeaux","33",44.8404,-0.5805,14,2,1,[4,45],[14,1]],["Toulouse","31",43.6043,1.4437,12.1,1,1,[5,45],[12,2]],["Montpellier","34",43.6109,3.8763,13.6,3,1,[11,3],[14,3]],["Marseille","13",43.2965,5.3698,19.1,1,1,[17,3],[18,3]],["Nice","06",43.7031,7.2661,14.5,61,1,[14,61],[15,61]],["Ajaccio","2A",41.9192,8.7386,17.9,61,1,[15,3],[18,61]]]},"vigilance":{"_note":"Relevé de la vigilance affichée sur le site actuel le 5 novembre 2026 à 15 h 20 (source indiquée : Météo-France). Données de démonstration figées : la maquette ne les met pas à jour.","releve":"2026-11-05T15:20","jours":{"aujourdhui":[["orange","pluie-inondation",["2A","30","2B","34"]],["jaune","pluie-inondation",["07","83","06","13"]],["jaune","orages",["83","2A","30","13","2B","34"]],["jaune","crues",["30","2B","34"]]],"demain":[["orange","pluie-inondation",["2A","2B"]],["jaune","pluie-inondation",["83","06","30","13","34"]],["jaune","orages",["2A","30","13","2B","34"]],["jaune","crues",["30","2B","34"]]]},"phenomenes":{"pluie-inondation":"Pluie-inondation","orages":"Orages","crues":"Crues"},"niveaux":{"vert":0,"jaune":1,"orange":2,"rouge":3}},"textes":{}}</script>
+</body>
+</html>

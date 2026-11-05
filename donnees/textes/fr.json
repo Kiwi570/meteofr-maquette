@@ -1,0 +1,425 @@
+{
+  "commun": {
+    "navigation": "Navigation principale",
+    "menu": "Menu",
+    "fermer": "Fermer",
+    "actionEntete": "L'appli",
+    "chercher": "Chercher une commune",
+    "barreCommune": "Ma commune",
+    "barreRadar": "Radar",
+    "calmeReduire": "Réduire les animations",
+    "calmeRetablir": "Rétablir les animations",
+    "calmeSysteme": "Animations réduites par le réglage de votre appareil",
+    "sommaire": "Sommaire",
+    "sources": "Sources des données",
+    "sourceOpenMeteo": "Prévisions : Open-Meteo (CC BY 4.0)",
+    "sourceVigilance": "Vigilance : Météo-France",
+    "sourceRadar": "Radar de pluie : RainViewer",
+    "sourceRadarCourt": "Images radar : RainViewer",
+    "sourceCarte": "Contours des départements : IGN (Licence Ouverte)",
+    "confort": "Confort",
+    "retourHaut": "Retour en haut",
+    "devise": "La météo de vos communes",
+    "independant": "Service indépendant, non affilié à Météo-France.",
+    "maquette": "Maquette : les informations marquées « à compléter » seront fournies par MétéoFR.",
+    "mentions": "Mentions légales (à compléter)",
+    "confidentialite": "Politique de confidentialité (à compléter)",
+    "evitement": "Aller au contenu",
+    "mentionIa": "Illustration générée",
+    "pause": "Pause",
+    "lecture": "Lecture"
+  },
+  "pages": {
+    "accueil": {
+      "titre": "MétéoFR : la météo de vos communes, en direct",
+      "description": "Le ciel de votre commune en direct, heure par heure et sur 16 jours, la vigilance du jour et le radar de pluie, partout en France.",
+      "nav": "Accueil",
+      "partageAlt": "MétéoFR, la météo de vos communes, sous un grand ciel bleu",
+      "accroche": "Le ciel de votre commune, en direct"
+    },
+    "commune": {
+      "titre": "Ma commune : météo en direct et 16 jours · MétéoFR",
+      "description": "Conditions en direct, heure par heure, prévisions à 16 jours, vent, soleil et vigilance de votre commune.",
+      "nav": "Ma commune",
+      "partageAlt": "La météo d'une commune vue par la fenêtre",
+      "accroche": "Votre commune, par la fenêtre"
+    },
+    "radar": {
+      "titre": "Radar de pluie et carte des prévisions · MétéoFR",
+      "description": "Les images radar des deux dernières heures sur la France et la carte des prévisions du matin et de l'après-midi.",
+      "nav": "Radar & carte",
+      "partageAlt": "Carte de France du radar de pluie",
+      "accroche": "La pluie, image par image"
+    },
+    "vigilance": {
+      "titre": "Vigilance météo du jour et de demain · MétéoFR",
+      "description": "Les départements en vigilance jaune, orange ou rouge aujourd'hui et demain, par phénomène, avec la source officielle.",
+      "nav": "Vigilance",
+      "partageAlt": "Carte de la vigilance météo par département",
+      "accroche": "Jaune, orange, rouge : la vigilance du jour"
+    },
+    "application": {
+      "titre": "L'application MétéoFR pour Android · MétéoFR",
+      "description": "MétéoFR dans votre poche : recherche de commune, direct, radar et vigilance. Installation de l'APK pas à pas.",
+      "nav": "Application",
+      "partageAlt": "L'application MétéoFR au-dessus d'une mer de nuages",
+      "accroche": "MétéoFR dans votre poche"
+    },
+    "contact": {
+      "titre": "Contact · MétéoFR",
+      "description": "Une question, une erreur de prévision à signaler, une demande presse ou partenariat : écrivez à MétéoFR.",
+      "nav": "Contact",
+      "partageAlt": "Un ballon-sonde qui s'élève dans le ciel de l'aube",
+      "accroche": "Écrivez-nous, on vous répond"
+    },
+    "404": {
+      "titre": "Visibilité nulle : page introuvable · MétéoFR",
+      "description": "Cette page n'existe pas ou plus.",
+      "nav": "Page introuvable",
+      "partageAlt": "Brouillard épais sur la campagne",
+      "accroche": "Visibilité nulle"
+    }
+  },
+  "composants": {
+    "rechercheLabel": "Votre commune",
+    "recherchePlaceholder": "Ville ou village, par exemple Metz",
+    "rechercheBouton": "Voir la météo",
+    "rechercheListe": "Communes trouvées",
+    "localiser": "Me localiser",
+    "ressenti": "Ressenti",
+    "mini": "Mini",
+    "maxi": "Maxi",
+    "majA": "Mis à jour à {heure}",
+    "sourceReleve": "relevé Open-Meteo",
+    "matin": "Matin",
+    "aprem": "Après-midi",
+    "nonDisponible": "Non disponible",
+    "minmax": "De {min} à {max}",
+    "courbeAria": "Courbe des températures et probabilité de pluie pour les 24 prochaines heures",
+    "ventDe": "Vent {dir}",
+    "dir": {
+      "N": "du nord",
+      "NE": "du nord-est",
+      "E": "d'est",
+      "SE": "du sud-est",
+      "S": "du sud",
+      "SO": "du sud-ouest",
+      "O": "d'ouest",
+      "NO": "du nord-ouest"
+    },
+    "jauge": {
+      "vent": "Vent moyen",
+      "rafales": "Rafales",
+      "hum": "Humidité",
+      "nuages": "Nuages",
+      "pluie": "Pluie (1 h)",
+      "pression": "Pression"
+    }
+  },
+  "accueil": {
+    "ciel": {
+      "surtitre": "En direct",
+      "titre1": "Le ciel de votre commune,",
+      "titre2": "en direct.",
+      "fiche": "Voir la fiche complète",
+      "defiler": "Faites défiler"
+    },
+    "maintenant": {
+      "surtitre": "Maintenant",
+      "titre": "Le temps qu'il fait en ce moment",
+      "alt": "Abri météo et anémomètre dans un pré au petit matin",
+      "girouette": "La flèche indique d'où vient le vent."
+    },
+    "heures": {
+      "surtitre": "Heure par heure",
+      "titre": "Les 24 prochaines heures",
+      "note": "Température et probabilité de pluie, heure par heure.",
+      "indice": "Passez la souris ou le doigt sur la courbe pour lire chaque heure.",
+      "region": "Prévisions heure par heure, défilement horizontal"
+    },
+    "vigilance": {
+      "surtitre": "Vigilance du jour",
+      "titre": "Faut-il s'inquiéter aujourd'hui ?",
+      "carteAria": "Carte des départements colorés selon la vigilance du jour",
+      "demain": "Aujourd'hui et demain"
+    },
+    "radar": {
+      "surtitre": "Radar de pluie",
+      "titre": "La pluie des deux dernières heures",
+      "carteAria": "Carte de France sur laquelle passent les images radar",
+      "lien": "Ouvrir le radar en grand"
+    },
+    "jours": {
+      "surtitre": "Seize jours",
+      "titre": "Seize jours, matin et après-midi",
+      "filtres": "Filtrer les jours",
+      "tous": "Tous",
+      "secs": "Jours secs",
+      "pluie": "Jours de pluie",
+      "region": "Prévisions sur 16 jours, défilement horizontal",
+      "note": "Matin : 9 h · après-midi : 15 h. La barre situe la minimale et la maximale du jour sur l'échelle des seize jours."
+    },
+    "villes": {
+      "surtitre": "Grandes villes",
+      "titre": "Le ciel, d'une ville à l'autre",
+      "region": "Météo des grandes villes, défilement horizontal"
+    },
+    "appli": {
+      "surtitre": "L'application",
+      "titre": "Toute la météo, dans l'appli Android",
+      "bouton": "Installer l'appli Android",
+      "ecranRadar": "Radar · 2 dernières heures",
+      "ecranAlerte": "Les annonces apparaissent dans la cloche.",
+      "chercher": {
+        "titre": "Chercher sa commune",
+        "texte": "Ville ou village, partout en France : cherchez-la par son nom."
+      },
+      "direct": {
+        "titre": "Le direct, actualisé",
+        "texte": "Température, ressenti, vent et rafales, puis l'heure par heure."
+      },
+      "radar": {
+        "titre": "Le radar de pluie",
+        "texte": "Les images des deux dernières heures, pour voir arriver l'averse."
+      },
+      "alertes": {
+        "titre": "La vigilance et les annonces",
+        "texte": "Les départements en vigilance du jour, et les annonces dans la cloche."
+      }
+    },
+    "sources": {
+      "surtitre": "Sources et fraîcheur",
+      "manifeste": "Des sources nommées et datées : vous savez d'où vient la prévision, et à quelle heure elle a été mise à jour.",
+      "openmeteo": "Prévisions en direct, heure par heure et sur 16 jours",
+      "meteofrance": "Vigilance officielle par département",
+      "rainviewer": "Images du radar de pluie",
+      "ign": "Contours des départements",
+      "alt": "Ballon-sonde blanc qui s'élève dans le ciel de l'aube",
+      "bouton": "Voir ma commune",
+      "radar": "Le radar"
+    }
+  },
+  "vigilance": {
+    "niveau": {
+      "vert": "vert",
+      "jaune": "jaune",
+      "orange": "orange",
+      "rouge": "rouge"
+    },
+    "bandeau": {
+      "vert": "Pas de vigilance particulière",
+      "jaune": "Vigilance jaune",
+      "orange": "Vigilance orange",
+      "rouge": "Vigilance rouge"
+    },
+    "releve": "Démonstration : relevé du {date} à {heure}, tel qu'affiché sur le site actuel (source Météo-France).",
+    "relevePasse": "Ce relevé est passé : consultez la vigilance officielle du jour.",
+    "officiel": "Vigilance officielle",
+    "sens": {
+      "vert": "Pas de vigilance particulière",
+      "jaune": "Soyez attentif",
+      "orange": "Soyez très vigilant",
+      "rouge": "Vigilance absolue"
+    },
+    "page": {
+      "surtitre": "Vigilance météo",
+      "titre": "Vigilance",
+      "resume": "Aujourd'hui : {niveau}. {orange} en orange, {jaune} en jaune.",
+      "voirCarte": "Voir la carte",
+      "nuancierAria": "Niveau du jour : {niveau}",
+      "crueAlt": "Rivière gonflée d'eau brune sous un ciel gris",
+      "carteSurtitre": "Par département",
+      "carteTitre": "Aujourd'hui et demain",
+      "jour": "Jour affiché",
+      "aujourdhui": "Aujourd'hui",
+      "demain": "Demain",
+      "demainNote": "Démonstration : relevé figé du 5 novembre 2026, il ne se met pas à jour dans la maquette.",
+      "couleursSurtitre": "Les quatre couleurs",
+      "couleursTitre": "Que faire selon la couleur",
+      "reflexesTitre": "Les bons réflexes",
+      "r1": "En vigilance orange ou rouge, suivez les consignes des autorités et de Météo-France.",
+      "r2": "Pluie, orages, crues : renseignez-vous avant de prendre la route.",
+      "r3": "Gardez un œil sur la fiche de votre commune, mise à jour en direct.",
+      "source": "La vigilance est produite par Météo-France. MétéoFR la reprend et renvoie vers le site officiel pour les consignes détaillées.",
+      "bottesAlt": "Bottes en caoutchouc et parapluie sur un seuil, sous la pluie",
+      "vert": "Vert : pas de vigilance particulière. Jaune, orange et rouge sont détaillés en haut de page."
+    }
+  },
+  "radar": {
+    "chargement": "Chargement des images radar…",
+    "surtitre": "Radar de pluie",
+    "titre": "La pluie, image par image",
+    "carteAria": "Carte de France sur laquelle défilent les images du radar de pluie",
+    "pause": "Pause",
+    "lecture": "Lecture",
+    "curseur": "Choisir l'image du radar",
+    "calques": {
+      "surtitre": "Carte des prévisions",
+      "titre": "Vingt villes, trois moments de la journée",
+      "moment": "Moment de la journée",
+      "fond": "Fond de carte",
+      "direct": "En direct",
+      "temperatures": "Températures",
+      "carteAria": "Carte de France des prévisions dans vingt villes",
+      "etatDirect": "En direct : conditions actuelles.",
+      "etatMatin": "Matin : prévision de 9 h.",
+      "etatAprem": "Après-midi : prévision de 15 h.",
+      "froid": "Froid",
+      "chaud": "Chaud",
+      "note": "Touchez une ville pour ouvrir sa fiche complète.",
+      "vigNote": "Fond « Vigilance » : relevé de démonstration du 5 novembre 2026, 15 h 20 (Météo-France)."
+    },
+    "lire": {
+      "surtitre": "Lire le radar",
+      "titre": "Ce que montrent les couleurs",
+      "faible": "Faible",
+      "forte": "Forte",
+      "alt": "Averse isolée qui tombe au loin sur une plaine ensoleillée",
+      "c1t": "Plus c'est foncé, plus il pleut.",
+      "c1": "Les teintes claires signalent une pluie faible, les plus soutenues une pluie forte ou un orage.",
+      "c2t": "Regardez le mouvement.",
+      "c2": "Faites défiler les images : la pluie avance presque toujours dans le sens du vent.",
+      "c3t": "Le radar montre le passé.",
+      "c3": "Pour la suite, l'heure par heure de votre commune prend le relais."
+    },
+    "faq": {
+      "surtitre": "Questions",
+      "titre": "Le radar, en clair",
+      "q1": "D'où viennent les images ?",
+      "q1r": "Du service RainViewer, qui rassemble les radars météo. Chaque image porte son heure.",
+      "q2": "Quelle période couvrent-elles ?",
+      "q2r": "Les deux dernières heures, en plusieurs images successives : l'heure de chacune s'affiche au-dessus du curseur.",
+      "q3": "Pourquoi une zone reste-t-elle vide ?",
+      "q3r": "Le radar ne voit que les précipitations : une zone vide signifie qu'il ne pleut pas, ou que la pluie est trop faible pour être captée.",
+      "q4": "Et les prévisions des prochaines heures ?",
+      "q4r": "Elles sont sur la carte des prévisions ci-dessus et, heure par heure, sur la fiche de chaque commune."
+    }
+  },
+  "introuvable": {
+    "titre": "Visibilité nulle",
+    "texte": "Cette page s'est perdue dans le brouillard : elle n'existe pas ou plus.",
+    "retour": "Revenir à l'accueil"
+  },
+  "commune": {
+    "surtitre": "En direct",
+    "departement": "département {dep}",
+    "favoriAjouter": "Ajouter aux favoris",
+    "favoriRetirer": "Retirer des favoris",
+    "favorisListe": "Vos communes favorites",
+    "vitreAlt": "Le ciel du moment, vu par la fenêtre (illustration)",
+    "indiceSouris": "Passez la souris sur la vitre pour essuyer la buée",
+    "indiceDoigt": "Glissez le doigt sur la vitre pour essuyer la buée",
+    "heures": {
+      "titre": "Les 24 prochaines heures"
+    },
+    "jours": {
+      "titre": "Seize jours, du matin à l'après-midi",
+      "note": "Matin : 9 h · après-midi : 15 h. La barre situe la minimale et la maximale du jour sur l'échelle des seize jours."
+    },
+    "vent": {
+      "surtitre": "Vent",
+      "titre": "D'où vient le vent, et à quelle force",
+      "direction": "Direction",
+      "note": "Rafales prévues sur les 12 prochaines heures :",
+      "rafalesAria": "Rafales prévues heure par heure",
+      "alt": "Hautes herbes couchées par une rafale"
+    },
+    "soleil": {
+      "surtitre": "Soleil",
+      "titre": "La course du soleil aujourd'hui",
+      "duree": "{h} h {m} de jour",
+      "lever": "Lever",
+      "coucher": "Coucher",
+      "alt": "Ciel orangé après le coucher du soleil"
+    },
+    "vigilance": {
+      "surtitre": "Vigilance",
+      "titre": "Et dans votre département ?",
+      "carteAria": "Carte de France, votre département mis en avant",
+      "departement": "Département : {dep}.",
+      "inconnu": "Département non précisé pour cette position.",
+      "lien": "Toute la vigilance"
+    }
+  },
+  "application": {
+    "surtitre": "Application Android",
+    "titre": "MétéoFR dans votre poche",
+    "texte": "La météo de votre commune, le radar et la vigilance, toujours sous la main.",
+    "bouton": "Installer l'appli Android",
+    "comment": "Voir les fonctions",
+    "info": "Android (fichier APK) · iPhone : à compléter · version et taille : à compléter",
+    "fonctions": {
+      "surtitre": "Fonctions",
+      "titre": "Tout ce que fait l'appli",
+      "f1t": "Toutes les communes",
+      "f1": "Ville ou village, partout en France.",
+      "f2t": "Le direct",
+      "f2": "Température, ressenti, vent et rafales.",
+      "f3t": "Le radar",
+      "f3": "Les images des deux dernières heures.",
+      "f4t": "Vigilance et annonces",
+      "f4": "Les départements concernés, et les annonces dans la cloche.",
+      "f5t": "Favoris",
+      "f5": "Vos communes, en un geste (avec un compte).",
+      "f6t": "Seize jours",
+      "f6": "Matin et après-midi, jour par jour."
+    },
+    "installer": {
+      "surtitre": "Installation",
+      "titre": "Installer l'APK en quatre étapes",
+      "e1t": "Télécharger le fichier",
+      "e1": "Depuis votre téléphone Android, téléchargez le fichier APK de MétéoFR.",
+      "e2t": "Autoriser l'installation",
+      "e2": "Si Android le demande, autorisez votre navigateur à installer des applications.",
+      "e3t": "Ouvrir le fichier",
+      "e3": "Ouvrez le fichier téléchargé, puis confirmez l'installation.",
+      "e4t": "Lancer MétéoFR",
+      "e4": "Ouvrez l'appli et cherchez votre commune.",
+      "note": "Version, taille et empreinte du fichier : à compléter par MétéoFR.",
+      "alt": "Téléphone posé sur une table, près d'une fenêtre mouillée"
+    },
+    "faq": {
+      "surtitre": "Questions",
+      "titre": "Avant d'installer",
+      "q1": "L'appli existe-t-elle sur iPhone ?",
+      "q1r": "À compléter par MétéoFR.",
+      "q2": "Est-elle gratuite ?",
+      "q2r": "À compléter par MétéoFR.",
+      "q3": "D'où viennent les données ?",
+      "q3r": "Prévisions d'Open-Meteo, vigilance de Météo-France, images radar de RainViewer.",
+      "q4": "Pourquoi un fichier APK plutôt qu'un magasin d'applications ?",
+      "q4r": "À compléter par MétéoFR.",
+      "contact": "Poser une autre question"
+    },
+    "apk": "Lien de téléchargement de l'APK : à brancher par MétéoFR (le fichier est aujourd'hui sur le site actuel)."
+  },
+  "contact": {
+    "surtitre": "Contact",
+    "titre": "Écrivez-nous",
+    "texte": "Une question, une erreur de prévision à signaler, une demande de presse ou un partenariat : laissez-nous un message.",
+    "sujet": "Votre demande",
+    "sujets": {
+      "question": "Une question",
+      "erreur": "Signaler une erreur",
+      "presse": "Presse",
+      "partenariat": "Partenariat"
+    },
+    "nom": "Nom",
+    "email": "E-mail",
+    "commune": "Commune concernée (facultatif)",
+    "message": "Message",
+    "envoyer": "Envoyer le message",
+    "donnees": "Vos données servent seulement à répondre à votre message. Politique de confidentialité : à compléter.",
+    "envoye": "Message simulé : rien n'a été envoyé. Sur le site final, il partira vers MétéoFR.",
+    "alt": "Ballon-sonde blanc qui s'élève dans le ciel de l'aube",
+    "coord": {
+      "surtitre": "Coordonnées",
+      "titre": "Où nous joindre",
+      "email": "E-mail",
+      "adresse": "Adresse",
+      "erreurT": "Signaler une erreur",
+      "erreur": "Indiquez la commune, le jour et l'heure de la prévision concernée."
+    },
+    "ecrire": "Écrire le message"
+  }
+}

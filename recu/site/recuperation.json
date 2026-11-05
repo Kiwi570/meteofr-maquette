@@ -1,0 +1,94 @@
+{
+  "site": "https://meteofr.lovable.app/",
+  "date": "2026-11-05T14:28:41.067Z",
+  "pages": [
+    "https://meteofr.lovable.app/",
+    "https://meteofr.lovable.app/auth"
+  ],
+  "images": [
+    {
+      "fichier": "meteofr.png",
+      "nom": "meteofr",
+      "origine": "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/lovp_2fnmf05f2m9zjvhtae05rpb4w1/f25033f445e486fcea36c09d763b0646_1793526842164.png",
+      "page": "https://meteofr.lovable.app/",
+      "pages": 2,
+      "emplacement": "og (meta)",
+      "contexte": {
+        "alt": "",
+        "legende": "",
+        "titre": "",
+        "section": "",
+        "page": "MétéoFR",
+        "fichier_origine": ""
+      },
+      "largeur": 1920,
+      "hauteur": 1080,
+      "poids": 651887,
+      "format": "png",
+      "transparence": false,
+      "drapeau": "autre"
+    }
+  ],
+  "ecartees": [
+    {
+      "url": "https://tile.openstreetmap.org/6/31/22.png",
+      "raison": "256 px de large"
+    },
+    {
+      "url": "https://tile.openstreetmap.org/6/31/21.png",
+      "raison": "256 px de large"
+    },
+    {
+      "url": "https://tile.openstreetmap.org/6/32/23.png",
+      "raison": "256 px de large"
+    },
+    {
+      "url": "https://tile.openstreetmap.org/6/32/22.png",
+      "raison": "256 px de large"
+    },
+    {
+      "url": "https://tile.openstreetmap.org/6/33/22.png",
+      "raison": "256 px de large"
+    },
+    {
+      "url": "https://tile.openstreetmap.org/6/32/21.png",
+      "raison": "256 px de large"
+    },
+    {
+      "url": "https://tile.openstreetmap.org/6/31/23.png",
+      "raison": "256 px de large"
+    },
+    {
+      "url": "https://tile.openstreetmap.org/6/33/21.png",
+      "raison": "256 px de large"
+    },
+    {
+      "url": "https://tile.openstreetmap.org/6/33/23.png",
+      "raison": "256 px de large"
+    },
+    {
+      "url": "https://tile.openstreetmap.org/6/30/21.png",
+      "raison": "256 px de large"
+    },
+    {
+      "url": "https://tile.openstreetmap.org/6/30/22.png",
+      "raison": "256 px de large"
+    },
+    {
+      "url": "https://tile.openstreetmap.org/6/34/22.png",
+      "raison": "256 px de large"
+    },
+    {
+      "url": "https://tile.openstreetmap.org/6/30/23.png",
+      "raison": "256 px de large"
+    },
+    {
+      "url": "https://tile.openstreetmap.org/6/34/21.png",
+      "raison": "256 px de large"
+    },
+    {
+      "url": "https://tile.openstreetmap.org/6/34/23.png",
+      "raison": "256 px de large"
+    }
+  ]
+}

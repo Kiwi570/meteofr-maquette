@@ -1,0 +1,146 @@
+[
+  {
+    "source": "recu/grok/ciel-clair.jpg", "source_mobile": "recu/grok/ciel-clair-mobile.jpg",
+    "nom": "ciel-clair", "role": "ouverture", "mobile": "9:16", "zone_texte": "gauche",
+    "page": "Accueil, Ma commune", "emplacement": "Ciel vivant (temps clair, jour) et vue par la fenêtre de la fiche commune",
+    "priorite": "indispensable",
+    "alt": "Grand ciel bleu dégagé au-dessus de champs",
+    "scene": "A vast clear blue sky over open farmland at midday, only a few thin high wisps of cirrus, crisp autumn air, the low horizon a soft line of stubble fields and a distant row of trees.",
+    "variables": { "ambiance": "bright, airy and serene", "palette": "deep cerulean blue, pale horizon blue, straw gold and soft green", "lumiere": "clear midday sunlight from high above, the sun itself outside the frame", "lieu": "the open farmland of northern France", "saison": "a crisp autumn day" }
+  },
+  {
+    "source": "recu/grok/ciel-nuageux.jpg", "source_mobile": "recu/grok/ciel-nuageux-mobile.jpg",
+    "nom": "ciel-nuageux", "role": "ouverture", "mobile": "9:16", "zone_texte": "gauche",
+    "page": "Accueil, Ma commune", "emplacement": "Ciel vivant (nuageux, couvert)",
+    "priorite": "indispensable",
+    "alt": "Ciel chargé de nuages gris et blancs au-dessus de la campagne",
+    "scene": "A calm overcast sky of layered grey and white cumulus and stratocumulus clouds drifting over open farmland, soft breaks of pale light between the clouds, the low horizon a line of ploughed fields and distant hedgerows.",
+    "variables": { "ambiance": "quiet and contemplative", "palette": "pearl grey, slate blue, soft white and muted brown earth", "lumiere": "soft diffuse light filtering through the cloud layer", "lieu": "the open farmland of northern France", "saison": "a mild autumn afternoon" }
+  },
+  {
+    "source": "recu/grok/ciel-pluie.jpg", "source_mobile": "recu/grok/ciel-pluie-mobile.jpg",
+    "nom": "ciel-pluie", "role": "ouverture", "mobile": "9:16", "zone_texte": "gauche",
+    "page": "Accueil, Ma commune", "emplacement": "Ciel vivant (pluie, bruine, averses)",
+    "priorite": "indispensable",
+    "alt": "Rideaux de pluie sous un ciel gris bas au-dessus de champs mouillés",
+    "scene": "A steady rain shower falling from a low dark grey sky over open farmland, soft grey curtains of rain sweeping across the distance, wet glistening fields in the foreground, a few puddles reflecting the sky.",
+    "variables": { "ambiance": "moody and soft", "palette": "charcoal grey, wet slate blue, muted olive green and silver", "lumiere": "dim diffuse light under thick rain clouds", "lieu": "the open farmland of northern France", "saison": "a rainy autumn afternoon" }
+  },
+  {
+    "source": "recu/grok/ciel-orage.jpg", "source_mobile": "recu/grok/ciel-orage-mobile.jpg",
+    "nom": "ciel-orage", "role": "ouverture", "mobile": "9:16", "zone_texte": "gauche",
+    "page": "Accueil, Ma commune", "emplacement": "Ciel vivant (orage)",
+    "priorite": "indispensable",
+    "alt": "Nuage d'orage sombre au-dessus de champs encore éclairés",
+    "scene": "A towering storm cloud with a dark flat base building over open farmland at the end of the afternoon, one thin distant lightning bolt far away under the cloud, the foreground fields still lit by a last band of warm light.",
+    "variables": { "ambiance": "powerful yet calm", "palette": "ink blue, bruised violet grey, warm amber and deep green", "lumiere": "low warm sunlight under a dark storm ceiling", "lieu": "the open farmland of southern France", "saison": "a late summer evening" }
+  },
+  {
+    "source": "recu/grok/ciel-nuit.jpg", "source_mobile": "recu/grok/ciel-nuit-mobile.jpg",
+    "nom": "ciel-nuit", "role": "ouverture", "mobile": "9:16", "zone_texte": "gauche",
+    "page": "Accueil, Ma commune", "emplacement": "Ciel vivant (nuit dégagée)",
+    "priorite": "indispensable",
+    "alt": "Ciel étoilé et fin croissant de lune au-dessus de champs dans la nuit",
+    "scene": "A clear night sky full of stars over open farmland, a faint band of the Milky Way, a thin crescent moon low on the right, the land a dark silhouette with a faint deep blue glow along the horizon, no city glow.",
+    "variables": { "ambiance": "deep, quiet and peaceful", "palette": "deep navy, midnight blue, silver star points and black", "lumiere": "faint moonlight and starlight", "lieu": "the open farmland of northern France", "saison": "a clear autumn night" }
+  },
+  {
+    "source": "recu/grok/ciel-brouillard.jpg", "source_mobile": "recu/grok/ciel-brouillard-mobile.jpg",
+    "nom": "ciel-brouillard", "role": "ouverture", "mobile": "9:16", "zone_texte": "gauche",
+    "page": "Accueil, Ma commune, 404", "emplacement": "Ciel vivant (brouillard) et page 404",
+    "priorite": "indispensable",
+    "alt": "Brouillard épais sur la campagne, quelques arbres qui s'effacent",
+    "scene": "Dense morning fog over open farmland, the sky a soft milky white fading into the fields, the faint silhouettes of a few bare trees dissolving into the mist, almost no visible horizon.",
+    "variables": { "ambiance": "hushed and mysterious", "palette": "milky white, pale grey, muted sage and soft taupe", "lumiere": "soft shadowless diffuse light", "lieu": "the open farmland of eastern France", "saison": "a still November morning" }
+  },
+  {
+    "source": "recu/grok/mer-de-nuages.jpg", "source_mobile": "recu/grok/mer-de-nuages-mobile.jpg",
+    "nom": "mer-de-nuages", "role": "ouverture", "mobile": "9:16", "zone_texte": "centre",
+    "page": "Application, Accueil", "emplacement": "Ouverture de la page Application (le téléphone sort des nuages) et section L'appli de l'accueil",
+    "priorite": "indispensable",
+    "alt": "Mer de nuages vue d'en haut au lever du soleil",
+    "scene": "A sea of clouds seen from high above at sunrise, soft rolling white cloud tops stretching to the horizon, the sun rising just out of frame on the right, golden light grazing the cloud surfaces, a clear deep blue sky above, no mountain peaks, no aircraft.",
+    "variables": { "ambiance": "luminous, weightless and hopeful", "palette": "deep blue, soft white, peach and warm gold", "lumiere": "low golden sunrise light grazing the clouds from the right", "lieu": "the sky high above the clouds", "saison": "a clear autumn sunrise" }
+  },
+  {
+    "source": "recu/grok/ballon-sonde.jpg", "source_mobile": "recu/grok/ballon-sonde-mobile.jpg",
+    "nom": "ballon-sonde", "role": "ouverture", "mobile": "9:16", "zone_texte": "gauche",
+    "page": "Contact, Accueil", "emplacement": "Ouverture de la page Contact et section Sources de l'accueil",
+    "priorite": "indispensable",
+    "alt": "Ballon-sonde blanc qui s'élève dans le ciel de l'aube",
+    "scene": "A plain white weather balloon carrying a small plain white instrument box on a long thin line, rising into a pale dawn sky above misty farmland, seen from below at a distance, the balloon in the upper right third of the frame, no markings at all on the balloon or the box.",
+    "variables": { "ambiance": "light, hopeful and calm", "palette": "pale sky blue, soft apricot, white and misty green", "lumiere": "soft early dawn light from the right", "lieu": "the open farmland of northern France", "saison": "a calm autumn dawn" }
+  },
+  {
+    "source": "recu/grok/ciel-neige.jpg", "source_mobile": "recu/grok/ciel-neige-mobile.jpg",
+    "nom": "ciel-neige", "role": "ouverture", "mobile": "9:16", "zone_texte": "gauche",
+    "page": "Accueil, Ma commune", "emplacement": "Ciel vivant (neige)",
+    "priorite": "conseillée",
+    "alt": "Neige qui tombe doucement sur des champs blancs",
+    "scene": "Gentle snowfall from a pale grey sky over snow-covered farmland, large soft flakes in the air, a distant line of frosted trees, everything quiet and white.",
+    "variables": { "ambiance": "quiet, soft and cold", "palette": "soft white, cool blue grey, pale lilac and dark bark brown", "lumiere": "soft even winter light", "lieu": "the open farmland of eastern France", "saison": "a still winter afternoon" }
+  },
+  {
+    "source": "recu/grok/ciel-crepuscule.jpg", "source_mobile": "recu/grok/ciel-crepuscule-mobile.jpg",
+    "nom": "ciel-crepuscule", "role": "ouverture", "mobile": "9:16", "zone_texte": "gauche",
+    "page": "Accueil, Ma commune", "emplacement": "Ciel vivant (aube et crépuscule) et section Soleil de la fiche commune",
+    "priorite": "conseillée",
+    "alt": "Ciel orangé après le coucher du soleil au-dessus des champs",
+    "scene": "A glowing sky just after sunset over open farmland, the sun already below the horizon, bands of orange and pink cloud under a deep blue upper sky, the fields a dark silhouette.",
+    "variables": { "ambiance": "warm, calm and golden", "palette": "deep blue, coral pink, ember orange and dark umber", "lumiere": "afterglow just after sunset", "lieu": "the open farmland of northern France", "saison": "an autumn evening" }
+  },
+  {
+    "source": "recu/grok/station-meteo.jpg",
+    "nom": "station-meteo", "role": "section-fond", "zone_texte": "droite",
+    "page": "Accueil", "emplacement": "Section Maintenant (vent, pression, humidité)",
+    "priorite": "conseillée",
+    "alt": "Abri météo en bois blanc et anémomètre dans un pré au petit matin",
+    "scene": "A traditional white wooden louvred instrument shelter on legs and a cup anemometer on a thin mast standing alone in a mown grass field, dew on the grass, the instruments on the left half of the frame, plain unmarked surfaces, no dials, no numbers.",
+    "variables": { "ambiance": "fresh, precise and calm", "palette": "white, soft sky blue, fresh green and pale gold", "lumiere": "soft early morning side light from the left", "lieu": "the open farmland of northern France", "saison": "a clear autumn morning" }
+  },
+  {
+    "source": "recu/grok/vent-herbes.jpg",
+    "nom": "vent-herbes", "role": "section-fond", "zone_texte": "droite",
+    "page": "Ma commune", "emplacement": "Section Vent et rafales",
+    "priorite": "conseillée",
+    "alt": "Hautes herbes couchées par une rafale de vent",
+    "scene": "Close view of tall wild grasses and seed heads bending strongly in a gust of wind at the edge of a field, slight motion blur on the grass tips, a fast moving cloudy sky behind, the grasses on the left half of the frame.",
+    "variables": { "ambiance": "lively and fresh", "palette": "straw gold, sage green, slate blue and white", "lumiere": "bright broken sunlight between fast clouds", "lieu": "the open farmland of western France", "saison": "a windy autumn day" }
+  },
+  {
+    "source": "recu/grok/crue.jpg",
+    "nom": "crue", "role": "section-fond", "mobile": "4:5", "zone_texte": "haut",
+    "page": "Vigilance", "emplacement": "Bandeau photo sous le grand titre de la page Vigilance",
+    "priorite": "conseillée",
+    "alt": "Rivière gonflée d'eau brune entre des berges herbeuses sous un ciel gris",
+    "scene": "A wide calm river swollen with brown water after heavy rain, flowing high between grassy banks and a row of willows, low grey sky, no buildings, no bridge, no debris, nothing dramatic.",
+    "variables": { "ambiance": "serious and calm", "palette": "muddy ochre, grey green, slate grey and pale white", "lumiere": "flat grey light under low clouds", "lieu": "the countryside of southern France", "saison": "a grey autumn day after heavy rain" }
+  },
+  {
+    "source": "recu/grok/bottes.jpg",
+    "nom": "bottes", "role": "vignette", "zone_texte": "droite",
+    "page": "Vigilance", "emplacement": "Section Les bons réflexes",
+    "priorite": "conseillée",
+    "alt": "Bottes en caoutchouc et parapluie fermé sur un seuil sous la pluie",
+    "scene": "A pair of plain dark green rubber boots and a closed black umbrella standing on a stone doorstep, light rain falling outside, the open door frame in soft focus, the objects on the left half of the frame, no people, no hands.",
+    "variables": { "ambiance": "cosy and reassuring", "palette": "bottle green, black, wet stone grey and warm wood", "lumiere": "soft grey daylight from outside", "lieu": "a country house doorway", "saison": "a rainy autumn morning" }
+  },
+  {
+    "source": "recu/grok/telephone-table.jpg",
+    "nom": "telephone-table", "role": "vignette", "zone_texte": "droite",
+    "page": "Application", "emplacement": "Section Installer l'appli",
+    "priorite": "facultative",
+    "alt": "Téléphone posé sur une table en bois près d'une fenêtre mouillée",
+    "scene": "A plain unbranded smartphone lying face up on a light oak table beside a cup of tea, the screen showing only a soft abstract blue glow, rain-streaked window light from the left, no hands.",
+    "variables": { "ambiance": "calm and homely", "palette": "light oak, soft blue, cream and grey", "lumiere": "soft rain-filtered window light from the left", "lieu": "a quiet kitchen", "saison": "a rainy autumn afternoon" }
+  },
+  {
+    "source": "recu/grok/averse-au-loin.jpg",
+    "nom": "averse-au-loin", "role": "section-fond", "zone_texte": "gauche",
+    "page": "Radar et carte", "emplacement": "Section Lire le radar",
+    "priorite": "facultative",
+    "alt": "Averse isolée qui tombe au loin sur une plaine ensoleillée",
+    "scene": "A single isolated rain shower falling from a dark cloud far away over a wide plain, sunlight on the foreground fields, a clear sharp edge between the grey rain shaft and the dry air, the shower in the right half of the frame.",
+    "variables": { "ambiance": "spacious and dramatic", "palette": "sunlit gold, slate grey, blue and soft green", "lumiere": "bright sun on the foreground under a dark distant cloud", "lieu": "the wide plains of central France", "saison": "a showery spring afternoon" }
+  }
+]
