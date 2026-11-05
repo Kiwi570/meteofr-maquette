@@ -22,7 +22,7 @@
    Mode calme, secours, retour arrière, retour à la section : rien ne bouge à l'arrivée, tout est dans son état final.
    Sans JavaScript : contenu normal. Aucune lecture de mise en page pendant le défilement : les textes sont découpés
    à l'avance, pendant les temps morts, et rétablis quand le défilement s'arrête. */
-import { html, etat, quand, stockage } from './etat.js?v=1';
+import { html, etat, quand, stockage } from './etat.js?v=2';
 
 const ENTREES = ['lignes', 'mots', 'cascade', 'rideau'];
 const decoupes = new Set();
@@ -328,7 +328,7 @@ export function initEffets() {
   faire('[data-fx="galerie"]', galerie);
   try { survol(gsap); } catch (err) { console.error('[effets] survol', err); }
   if (document.querySelector('[data-fx="onde"]')) {
-    return import('./onde.js?v=1').then((m) => m.initOnde()).catch((err) => console.error('[effets] onde', err));
+    return import('./onde.js?v=2').then((m) => m.initOnde()).catch((err) => console.error('[effets] onde', err));
   }
   return Promise.resolve();
 }

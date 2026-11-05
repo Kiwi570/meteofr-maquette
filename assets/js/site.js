@@ -1,12 +1,14 @@
 /* MétéoFR : orchestration des pages. Le socle gère ouverture, voile, en-tête, menu, mode calme, boucles
    et bibliothèque d'effets ; ici : l'intro « jour-qui-se-lève », le ciel vivant et les données en direct. */
-import { demarrer, etat } from './socle/index.js?v=1';
-import * as M from './meteo.js?v=1';
-import { CielVivant, figureCiel, rouleaux } from './ciel.js?v=1';
-import { Radar } from './radar.js?v=1';
-import * as E from './effets-meteo.js?v=1';
-import { listeHeuresHTML, semainierHTML, majTexte, remplacerIcone } from './rendu.js?v=1';
-import { pages } from './pages.js?v=1';
+import { demarrer, etat } from './socle/index.js?v=2';
+import * as M from './meteo.js?v=2';
+import { CielVivant, figureCiel, rouleaux } from './ciel.js?v=2';
+import { Radar } from './radar.js?v=2';
+import * as E from './effets-meteo.js?v=2';
+import { listeHeuresHTML, semainierHTML, bandesHTML, majTexte, remplacerIcone } from './rendu.js?v=2';
+import * as A from './v2-accueil.js?v=2';
+import * as V from './v2-pages.js?v=2';
+import { pages } from './pages.js?v=2';
 
 const gsap = window.gsap;
 const page = document.documentElement.dataset.page;
@@ -67,12 +69,12 @@ function jouer() {
 
 /* ---------- Accueil ---------- */
 const contexte = { lieu: lieuInitial, modele: null };
-let cielVivant = null, gir = null, crb = null, sem = null;
+let cielVivant = null, gir = null, crb = null, sem = null, nuages = null, vent = null, jr = null, sonde = null, ecranRadar = null;
 
 function paramsCiel(m) {
   const quand = m.direct ? new Date() : new Date(`${m.maj}:00+01:00`);
   const alt = M.hauteurSoleil(quand, m.lieu.lat, m.lieu.lon);
-  return { etat: M.etatCiel(m.maintenant.code, m.maintenant.jour, alt), vent: m.maintenant.vent, dir: m.maintenant.dir, pluie: m.maintenant.pluie, nuages: m.maintenant.nuages };
+  return { etat: M.etatCiel(m.maintenant.code, m.maintenant.jour, alt), vent: m.maintenant.vent, dir: m.maintenant.dir, pluie: m.maintenant.pluie, nuages: m.maintenant.nuages, lieu: m.lieu, quand };
 }
 export function changerPhoto(section, etatCiel) {
   if (!section || section.dataset.etat === etatCiel) return;
@@ -87,7 +89,7 @@ export function changerPhoto(section, etatCiel) {
   });
   (img.decode ? img.decode() : Promise.resolve()).then(montrer, montrer);
 }
-function texte(cle, valeur) { $$(`[data-m="${cle}"]`).forEach((el) => { if (!el.hasAttribute('data-rouleaux')) el.textContent = valeur; }); }
+function texte(cle, valeur) { $$(`[data-m="${cle}"]`).forEach((el) => { if (el.hasAttribute('data-rouleaux')) return; el.dataset.cible = valeur; el.textContent = valeur; }); }
 
 function appliquerAccueil(m, { anime = true } = {}) {
   contexte.modele = m;
@@ -111,6 +113,10 @@ function appliquerAccueil(m, { anime = true } = {}) {
   changerPhoto(ciel, p.etat);
   $$('[data-ecran-etat]').forEach((e) => { e.dataset.ecranEtat = p.etat; });
   cielVivant && cielVivant.regler(p);
+  nuages && nuages.regler(p);
+  vent && vent.regler(mt);
+  sonde && sonde.regler(mt.t);
+  ecranRadar && ecranRadar.placer(m.lieu);
   const temp = $('[data-rouleaux]', ciel);
   if (temp && temp.__pret) rouleaux(temp, M.deg(mt.t), { animer: anime });
   const fiche = $('[data-m-lien="fiche"]'); if (fiche) fiche.href = M.lienCommune(m.lieu);
@@ -118,6 +124,8 @@ function appliquerAccueil(m, { anime = true } = {}) {
   crb && crb.regler(m.heures);
   const lh = $('[data-heures]'); if (lh) lh.innerHTML = listeHeuresHTML(m.heures);
   if (sem) { const ts = m.jours.flatMap((j) => [j.tmin, j.tmax]); sem.regler(semainierHTML(m.jours), Math.min(...ts), Math.max(...ts)); }
+  const bd = $('[data-bandes]'); if (bd) bd.innerHTML = bandesHTML(m.jours);
+  jr && jr.regler();
 }
 
 async function chargerLieu(lieu, { annoncer = false } = {}) {
@@ -145,26 +153,38 @@ function initAccueil() {
   /* Fond décoratif plein cadre : hors du test « tient dans l'écran » (contenus, légendes et commandes restent testés). */
   $$('.ciel-fond picture', ciel).forEach((p) => p.setAttribute('data-audit-ignorer', ''));
   contexte.modele = M.releve;
+  nuages = A.nuagesReels($('[data-ciel-nuages]', ciel), ciel);
   cielVivant = new CielVivant($('[data-ciel-calque]', ciel));
+  cielVivant.sansVoiles = !!nuages;
   cielVivant.regler(paramsCiel(M.releve));
+  nuages && nuages.regler(paramsCiel(M.releve));
+  vent = A.champDeVent($('[data-champ-vent]'));
+  vent.regler(M.releve.maintenant);
   const temp = $('[data-rouleaux]', ciel);
   rouleaux(temp, M.deg(M.releve.maintenant.t), { animer: false }); temp.__pret = true;
   gir = E.girouette($('[data-effet="girouette"]'));
   E.jauges($('[data-effet="jauges"]'));
+  A.compterJauges($('[data-effet="jauges"]'));
   if (!calme()) $$('[data-jauge]').forEach((b) => window.ScrollTrigger && window.ScrollTrigger.create({ trigger: b, start: 'top 85%', once: true, onEnter: () => { b.__vu = true; } }));
   crb = E.courbe($('[data-courbe]'));
   crb.regler(M.releve.heures);
-  E.vagueVigilance($('.france--vigilance'));
+  jr = A.journee($('[data-journee]'), { crb, modele: () => contexte.modele });
+  A.encre($('.france--vigilance'), { declencheur: $('#vigilance') });
   sem = E.semainier($('[data-semainier]'), $$('[data-filtres-jours] button'));
-  E.telephone($('[data-telephone]'));
+  A.bandes($('[data-bandes]'), $('[data-semainier]'));
+  A.appli($('#appli'));
+  sonde = A.radiosondage($('[data-sources]'), { t0: M.releve.maintenant.t });
+  A.villesGlissantes($('[data-villes]'));
   E.isobares($('[data-effet="isobares"]'));
   initRadarDefile($('[data-radar]'));
   initVilles();
   releveInfo();
+  if (window.ScrollTrigger) requestAnimationFrame(() => { window.ScrollTrigger.sort(); window.ScrollTrigger.refresh(); });
   /* Ciel vivant au défilement : l'horizon descend, le ciel s'ouvre, le texte s'éloigne. */
   if (!calme()) {
     gsap.to($('.ciel-fond', ciel), { yPercent: 16, ease: 'none', scrollTrigger: { trigger: ciel, start: 'top top', end: 'bottom top', scrub: true } });
     gsap.to($('.ciel-calque', ciel), { yPercent: -8, ease: 'none', scrollTrigger: { trigger: ciel, start: 'top top', end: 'bottom top', scrub: true } });
+    if (nuages) gsap.to($('.ciel-nuages', ciel), { yPercent: -5, ease: 'none', scrollTrigger: { trigger: ciel, start: 'top top', end: 'bottom top', scrub: true } });
     gsap.to($('.ciel-contenu', ciel), { y: -70, opacity: 0.15, ease: 'none', scrollTrigger: { trigger: ciel, start: 'center center', end: 'bottom top', scrub: true } });
   }
   E.initRecherche($('#recherche'), { surChoix: (l) => { M.memoriserLieu(l); contexte.lieu = l; chargerLieu(l, { annoncer: true }); } });
@@ -180,17 +200,12 @@ function releveInfo() {
 function initRadarDefile(sec) {
   if (!sec) return;
   const radar = new Radar($('.radar-scene', sec), { etiquette: $('[data-radar-heure]', sec), progres: $('[data-radar-progres]', sec), message: $('[data-radar-message]', sec) });
+  ecranRadar = A.radarEcran($('.radar-scene', sec), { lieu: contexte.lieu, faisceau: true });
   let progres = 1;
   const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { io.disconnect(); radar.charger().then(() => radar.dessiner(progres * (radar.images.length - 1), true)); } }, { rootMargin: '600px 0px' });
   io.observe(sec);
   if (calme()) return;
-  const mm = gsap.matchMedia();
-  mm.add('(min-width: 761px) and (min-height: 500px)', () => {
-    window.ScrollTrigger.create({ trigger: sec, start: 'top top', end: '+=110%', pin: true, scrub: true, invalidateOnRefresh: true, onUpdate: (s) => { progres = s.progress; radar.dessiner(s.progress * (radar.images.length - 1)); } });
-  });
-  mm.add('(max-width: 760px), (max-height: 499px)', () => {
-    window.ScrollTrigger.create({ trigger: sec, start: 'top 75%', end: 'bottom 25%', scrub: true, onUpdate: (s) => { progres = s.progress; radar.dessiner(s.progress * (radar.images.length - 1)); } });
-  });
+  window.ScrollTrigger.create({ trigger: sec, start: 'top 80%', end: 'bottom 30%', scrub: true, onUpdate: (s) => { progres = s.progress; radar.dessiner(s.progress * (radar.images.length - 1)); } });
   gsap.fromTo($('.radar-scene .france', sec), { scale: 0.9, opacity: 0.4 }, { scale: 1, opacity: 1, ease: 'none', scrollTrigger: { trigger: sec, start: 'top bottom', end: 'top top', scrub: true } });
 }
 
@@ -218,7 +233,8 @@ function initVilles() {
 demarrer({
   preparer() {
     if (page === 'accueil') initAccueil();
-    if (page === '404') E.brouillard($('[data-brume]'));
+    if (page === '404') E.brouillard($('[data-brume]'), { apres: V.ecrireDansLaBuee($('[data-brume]')) });
+    V.altimetre();
     const p = pages[page];
     if (p && p.preparer) p.preparer(contexte);
     $$('[data-recherche]').forEach((f) => E.initRecherche(f));

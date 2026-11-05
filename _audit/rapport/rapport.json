@@ -3,11 +3,232 @@
   "aRegarder": [
     {
       "niveau": "regarder",
-      "controle": "numéro de version",
-      "detail": "?v=1 est celui de la dernière livraison : à changer avant de livrer",
-      "etape": "fichiers",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 968 ms (différence 37 %) (films/ouverture-1366.png)",
+      "etape": "films",
+      "page": "/",
+      "taille": "1366×768",
+      "mode": "film",
       "lieux": [
-        ""
+        "1366×768 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 752 ms (différence 25 %) (films/ouverture-application-1366.png)",
+      "etape": "films",
+      "page": "/application",
+      "taille": "1366×768",
+      "mode": "film",
+      "lieux": [
+        "1366×768 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 923 ms (différence 24 %) (films/ouverture-commune-1366.png)",
+      "etape": "films",
+      "page": "/commune",
+      "taille": "1366×768",
+      "mode": "film",
+      "lieux": [
+        "1366×768 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 854 ms (différence 26 %) (films/ouverture-contact-1366.png)",
+      "etape": "films",
+      "page": "/contact",
+      "taille": "1366×768",
+      "mode": "film",
+      "lieux": [
+        "1366×768 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 812 ms (différence 27 %) (films/ouverture-radar-1366.png)",
+      "etape": "films",
+      "page": "/radar",
+      "taille": "1366×768",
+      "mode": "film",
+      "lieux": [
+        "1366×768 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 678 ms (différence 36 %) (films/ouverture-vigilance-1366.png)",
+      "etape": "films",
+      "page": "/vigilance",
+      "taille": "1366×768",
+      "mode": "film",
+      "lieux": [
+        "1366×768 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 872 ms (différence 25 %) (films/ouverture-vigilance-1366.png)",
+      "etape": "films",
+      "page": "/vigilance",
+      "taille": "1366×768",
+      "mode": "film",
+      "lieux": [
+        "1366×768 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "retour avant : changement brusque",
+      "detail": "à 83 ms (différence 50 %) (films/retour-avant-1366.png)",
+      "etape": "films",
+      "page": "/commune",
+      "taille": "1366×768",
+      "mode": "retour avant",
+      "lieux": [
+        "1366×768 retour avant"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "au retour avant, élément qui réapparaît en s’animant",
+      "detail": "",
+      "etape": "films",
+      "page": "/commune",
+      "taille": "1366×768",
+      "mode": "retour avant",
+      "selecteur": "figure.vitre > div.pluie > canvas.pluie__canvas",
+      "lieux": [
+        "1366×768 retour avant",
+        "390×844 retour avant"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 917 ms (différence 22 %) (films/ouverture-390.png)",
+      "etape": "films",
+      "page": "/",
+      "taille": "390×844",
+      "mode": "film",
+      "lieux": [
+        "390×844 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 783 ms (différence 21 %) (films/ouverture-application-390.png)",
+      "etape": "films",
+      "page": "/application",
+      "taille": "390×844",
+      "mode": "film",
+      "lieux": [
+        "390×844 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 800 ms (différence 21 %) (films/ouverture-application-390.png)",
+      "etape": "films",
+      "page": "/application",
+      "taille": "390×844",
+      "mode": "film",
+      "lieux": [
+        "390×844 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 900 ms (différence 28 %) (films/ouverture-commune-390.png)",
+      "etape": "films",
+      "page": "/commune",
+      "taille": "390×844",
+      "mode": "film",
+      "lieux": [
+        "390×844 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 853 ms (différence 24 %) (films/ouverture-contact-390.png)",
+      "etape": "films",
+      "page": "/contact",
+      "taille": "390×844",
+      "mode": "film",
+      "lieux": [
+        "390×844 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 914 ms (différence 23 %) (films/ouverture-radar-390.png)",
+      "etape": "films",
+      "page": "/radar",
+      "taille": "390×844",
+      "mode": "film",
+      "lieux": [
+        "390×844 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 667 ms (différence 25 %) (films/ouverture-vigilance-390.png)",
+      "etape": "films",
+      "page": "/vigilance",
+      "taille": "390×844",
+      "mode": "film",
+      "lieux": [
+        "390×844 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "ouverture : changement brusque",
+      "detail": "à 682 ms (différence 21 %) (films/ouverture-vigilance-390.png)",
+      "etape": "films",
+      "page": "/vigilance",
+      "taille": "390×844",
+      "mode": "film",
+      "lieux": [
+        "390×844 film"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "retour arrière : changement brusque",
+      "detail": "à 89 ms (différence 42 %) (films/retour-arrière-390.png)",
+      "etape": "films",
+      "page": "/",
+      "taille": "390×844",
+      "mode": "retour arrière",
+      "lieux": [
+        "390×844 retour arrière"
+      ]
+    },
+    {
+      "niveau": "regarder",
+      "controle": "retour avant : changement brusque",
+      "detail": "à 67 ms (différence 47 %) (films/retour-avant-390.png)",
+      "etape": "films",
+      "page": "/commune",
+      "taille": "390×844",
+      "mode": "retour avant",
+      "lieux": [
+        "390×844 retour avant"
       ]
     }
   ],
@@ -15,7 +236,7 @@
     {
       "controle": "services extérieurs en direct",
       "raison": "pas d'accès à Internet dans l'environnement d'audit : api.open-meteo.com, api.rainviewer.com non joints ; le site a affiché son repli (relevé figé, radar indisponible)",
-      "etape": "mesures"
+      "etape": "ecran"
     }
   ],
   "oks": {
@@ -25,11 +246,30 @@
     "numéro de version": 1,
     "langues": 1,
     "mesures": 77,
-    "balayage": 6
+    "balayage": 6,
+    "films d’ouverture": 12,
+    "films de transition": 12,
+    "tient dans l’écran": 8
   },
   "infos": [
-    "Numéro de version des fichiers : ?v=1",
+    "Numéro de version des fichiers : ?v=2",
     "Audit standard : étapes lourdes sur /, /application, /commune, /contact, /radar, /vigilance.",
-    "Accessibilité : axe-core 4.12.1 en plus des contrôles intégrés."
+    "Accessibilité : axe-core 4.12.1 en plus des contrôles intégrés.",
+    "Ouverture / (1366×768) : 2879 ms depuis le premier octet",
+    "Ouverture /application (1366×768) : 2875 ms depuis le premier octet",
+    "Ouverture /commune (1366×768) : 2912 ms depuis le premier octet",
+    "Ouverture /contact (1366×768) : 2895 ms depuis le premier octet",
+    "Ouverture /radar (1366×768) : 2749 ms depuis le premier octet",
+    "Ouverture /vigilance (1366×768) : 2858 ms depuis le premier octet",
+    "Ouverture / (390×844) : 2899 ms depuis le premier octet",
+    "Ouverture /application (390×844) : 2887 ms depuis le premier octet",
+    "Ouverture /commune (390×844) : 2899 ms depuis le premier octet",
+    "Ouverture /contact (390×844) : 2907 ms depuis le premier octet",
+    "Ouverture /radar (390×844) : 2851 ms depuis le premier octet",
+    "Ouverture /vigilance (390×844) : 2864 ms depuis le premier octet",
+    "Tient dans l'écran /application : aucune section épinglée ou plein écran.",
+    "Tient dans l'écran /commune : aucune section épinglée ou plein écran.",
+    "Tient dans l'écran /contact : aucune section épinglée ou plein écran.",
+    "Tient dans l'écran /vigilance : aucune section épinglée ou plein écran."
   ]
 }

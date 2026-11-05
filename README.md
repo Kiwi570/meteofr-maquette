@@ -1,21 +1,25 @@
-# MétéoFR · maquette v1 « Ciel vivant »
+# MétéoFR · maquette v2 « Ciel vivant »
 
 Maquette du site de MétéoFR (site actuel : meteofr.lovable.app), adresse prévue : https://meteofr-maquette.vercel.app.
 Site statique (HTML, CSS, JavaScript), généré depuis `donnees/` et `source/`, prêt pour Vercel sans étape de construction.
+
+Fil rouge de la v2 : **le site a la même météo que dehors**. Les données en direct pilotent les effets : le vent réel pousse les nuages et les filets d'air, la pluie mouille la vitre, le froid la givre, l'heure du soleil colore le ciel.
 
 ## Pages
 
 | Page | Ouverture | Effets propres |
 |---|---|---|
-| Accueil `/` | Intro « jour-qui-se-lève » (l'heure défile jusqu'à l'heure réelle, le ciel suit), puis ciel vivant | ciel-vivant, girouette, jauges, courbe-24h, vague-vigilance, radar-defile, thermo-rail, mini-ciels, telephone, isobares |
-| Ma commune `/commune?nom=…&lat=…&lon=…&dep=…` | « vitre » : le ciel réel vu par la fenêtre, pluie WebGL et buée à essuyer | vitre, rose-des-vents, arc-solaire, zoom-departement, thermo-rail |
-| Radar & carte `/radar` | « balayage » : un faisceau révèle les images radar | balayage, calques |
-| Vigilance `/vigilance` (`?jour=demain`) | « nuancier » : trois bandes qui se remplissent jusqu'au niveau du jour | nuancier, crue-voile, vague-vigilance |
-| Application `/application` | « émergence » : le téléphone monte à travers la mer de nuages | emergence |
-| Contact `/contact` (`?sujet=erreur`) | « ballon-sonde » : formulaire simulé, le ballon s'envole à l'envoi | ballon-sonde |
-| 404 | « brouillard » qui se dissipe sous le doigt | brouillard |
+| Accueil `/` | Intro « jour-qui-se-lève », puis **ciel réel** : nuages WebGL poussés par le vrai vent, densité = couverture réelle, soleil ou lune à leur vraie place | ciel-reel, ciel-vivant, champ-de-vent, girouette, jauges, journee-acceleree, courbe-24h, vague-vigilance (encre), radar-defile (écran radar), bandes-chaleur, thermo-rail, mini-ciels, telephone, radiosondage, isobares |
+| Ma commune `/commune?nom=…&lat=…&lon=…&dep=…` | « vitre » : une grande fenêtre sur le ciel réel ; gouttes, givre sous 1 °C ou reflet de soleil selon la météo, buée à essuyer | vitre, herbes-au-vent, rose-des-vents, coucher-de-soleil, arc-solaire, zoom-departement, thermo-rail |
+| Radar & carte `/radar` | « balayage » : un faisceau révèle les images radar, anneaux de distance et point de la commune | balayage, calques, carte-de-chaleur, averse-en-marche |
+| Vigilance `/vigilance` (`?jour=demain`) | « nuancier » : les bandes se remplissent jusqu'au niveau du jour, puis pulsent | nuancier, crue-voile (crue sous l'eau), vague-vigilance (encre), planches-empilees |
+| Application `/application` | « émergence » : le téléphone monte à travers la mer de nuages, qui s'écarte | emergence, telephone-fonctions, installation-en-direct |
+| Contact `/contact` (`?sujet=erreur`) | « ballon-sonde » : formulaire en trois étapes, le ballon monte à chaque champ rempli et s'envole à l'envoi | ballon-sonde, ballon-qui-monte |
+| 404 | « brouillard » : « 404 » écrit dans la buée, qui se dissipe sous le doigt | brouillard |
 
-Sur tout le site : voile de transition « front » (front froid des cartes météo), mode calme (« Réduire les animations », pied de page et menu).
+Sur tout le site : voile de transition « front » (un front de nuages balaie l'écran), altimètre des sections sur grand écran (accueil, Ma commune), mode calme (« Réduire les animations », pied de page et menu).
+
+Modules de la bibliothèque repris en v2 (mécanique, réécrite pour le socle) : pluie-sur-vitre, eau-qui-refracte (crue), revelation-a-l-encre (vigilance), planches-empilees, telephone-epingle, schema-epingle-etapes (averse en marche), rail-de-sections (altimètre), formulaire-par-etapes (contact).
 
 ## Données
 

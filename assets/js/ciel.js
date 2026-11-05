@@ -1,7 +1,7 @@
 /* « Ciel vivant » : la photo du ciel suit le temps réel de la commune (8 états) et un calque canvas
    y ajoute ce qui bouge vraiment : pluie inclinée par le vent, flocons, nuages qui dérivent à la vitesse
    du vent, étoiles, bancs de brume, éclairs espacés (jamais plus d'un double éclair toutes les 7 s). */
-import { boucle, etat as socle } from './socle/index.js?v=1';
+import { boucle, etat as socle } from './socle/index.js?v=2';
 
 const LARGEURS = [640, 1168, 1600], MOBILES = [480, 784, 1080];
 const MENTION = 'Illustration générée';
@@ -47,12 +47,14 @@ export class CielVivant {
     }
     if (etat === 'neige') for (let i = 0; i < (petit ? 60 : 130); i++) parts.push({ k: 'flocon', x: R() * w, y: R() * h, r: (1 + R() * 2.6) * s, v: (30 + R() * 50) * s, ph: R() * 6.28 });
     if (etat === 'nuit') for (let i = 0; i < (petit ? 50 : 110); i++) parts.push({ k: 'etoile', x: R() * w, y: R() * h * 0.62, r: (0.5 + R() * 1.3) * s, ph: R() * 6.28, f: 0.6 + R() * 1.8 });
-    if (etat === 'nuageux' || etat === 'clair' || etat === 'crepuscule' || etat === 'pluie' || etat === 'orage') {
+    if (!this.sansVoiles && (etat === 'nuageux' || etat === 'clair' || etat === 'crepuscule' || etat === 'pluie' || etat === 'orage')) {
       const n = etat === 'clair' ? 3 : 6;
       for (let i = 0; i < n; i++) parts.push({ k: 'voile', x: R() * w, y: h * (0.05 + R() * 0.45), rx: w * (0.18 + R() * 0.22), ry: h * (0.05 + R() * 0.07), a: etat === 'clair' ? 0.07 : 0.1 + R() * 0.08, v: 0.4 + R() * 0.8 });
     }
     if (etat === 'brouillard') for (let i = 0; i < 6; i++) parts.push({ k: 'brume', x: R() * w, y: h * (0.35 + R() * 0.6), rx: w * (0.35 + R() * 0.3), ry: h * (0.08 + R() * 0.1), a: 0.16 + R() * 0.12, v: 0.25 + R() * 0.4 });
     this.parts = parts;
+    /* Rien à dessiner (ciel couvert sous les nuages WebGL, par exemple) : le calque est retiré de la page. */
+    this.canvas.hidden = !parts.length && etat !== 'orage';
   }
   dessiner(dt, t) {
     const { ctx, w, h } = this, { etat, vent, dir } = this.p;

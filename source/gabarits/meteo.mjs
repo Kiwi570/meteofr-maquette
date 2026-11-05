@@ -102,9 +102,18 @@ export function niveauMax(c, jour = 'aujourdhui') {
 export function semainier(c, jours) {
   return html`${jours.map((j, i) => html`<li class="jour${j.pluie >= 1 ? ' jour--pluie' : ' jour--sec'}" data-pluie="${j.pluie >= 1 ? 'oui' : 'non'}" data-flip-id="j${i}">
     <p class="jour-nom">${jourCourt(j.date, i)}</p>
-    ${['matin', 'aprem'].map((k) => (j[k] ? html`<div class="jour-moment" style="--teinte:${teinte(j[k][0])}"><span class="jour-h"><span class="visuellement-cache">${c.t('composants.' + k)}, </span>${k === 'matin' ? '9 h' : '15 h'}</span>${ico(c, j[k][1], 1)}<strong>${deg(j[k][0])}</strong></div>` : html`<div class="jour-moment jour-moment--vide"><span>${c.t('composants.nonDisponible')}</span></div>`))}
+    ${['matin', 'aprem'].map((k) => (j[k] ? html`<div class="jour-moment" style="--teinte:${brut(teinte(j[k][0]))}"><span class="jour-h"><span class="visuellement-cache">${c.t('composants.' + k)}, </span>${k === 'matin' ? '9 h' : '15 h'}</span>${ico(c, j[k][1], 1)}<strong>${deg(j[k][0])}</strong></div>` : html`<div class="jour-moment jour-moment--vide"><span>${c.t('composants.nonDisponible')}</span></div>`))}
     <div class="thermo" role="img" style="--bas:${j.tmin};--haut:${j.tmax}" aria-label="${c.s('composants.minmax', { min: deg(j.tmin), max: deg(j.tmax) })}"><i data-thermo></i></div>
     <p class="jour-minmax"><span>${deg(j.tmin)}</span> <span>${deg(j.tmax)}</span></p>
     <p class="jour-pluie">${icone('goutte', 'ico ico--mini')}${j.pluie} mm</p>
   </li>`)}`;
+}
+
+/* Bandes de chaleur : une bande par jour, colorée par la température moyenne ; on touche un jour pour le voir en détail. */
+export function bandesChaleur(c, jours) {
+  return html`${jours.map((j, i) => {
+    const moy = (j.tmin + j.tmax) / 2;
+    const label = `${jourCourt(j.date, i)} : ${c.s('composants.minmax', { min: deg(j.tmin), max: deg(j.tmax) })}${j.pluie >= 1 ? `, ${String(j.pluie).replace('.', ',')} mm` : ''}`;
+    return html`<li class="bande-j${j.pluie >= 1 ? ' bande-j--pluie' : ''}${moy < 2 ? ' bande-j--froid' : ''}" style="--teinte:${brut(teinte(moy))}"><button type="button" data-jour-i="${i}" aria-label="${label}"><span class="bj-nom" aria-hidden="true">${jourCourt(j.date, i)}</span><span class="bj-t" aria-hidden="true">${deg(j.tmax)}</span>${j.pluie >= 1 ? brut('<span class="bj-gouttes" aria-hidden="true"><i></i><i></i><i></i></span>') : ''}</button></li>`;
+  })}`;
 }

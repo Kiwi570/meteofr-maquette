@@ -17,7 +17,7 @@ export default (c) => {
   return html`
 <section class="radar-plein ecran" id="debut" data-radar-page data-plein-ecran>
   <div class="radar-plein-scene">
-    <div class="radar-scene radar-scene--grande" data-effet="balayage">
+    <div class="radar-scene radar-scene--grande" data-effet="balayage" data-boucle-css>
       ${carteFrance(c, { classe: 'france--contours', aria: c.s('radar.carteAria') })}
       <canvas class="radar-canvas" data-radar-canvas aria-hidden="true"></canvas>
       <div class="faisceau" data-faisceau aria-hidden="true"></div>
@@ -58,6 +58,7 @@ export default (c) => {
   </div>
   <div class="calques-grille">
     <div class="calques-carte" data-calques data-effet="calques" data-fond="temperatures">
+      <canvas class="chaleur" data-chaleur data-effet="carte-de-chaleur" aria-hidden="true"></canvas>
       ${carteFrance(c, { niveaux, classe: 'france--calques', aria: c.s('radar.calques.carteAria') })}
       <div class="marqueurs" data-marqueurs>${brut(marqueurs)}</div>
     </div>
@@ -71,12 +72,17 @@ export default (c) => {
   </div>
 </section>
 
-<section class="lire conteneur" id="lire">
-  ${c.media({ nom: 'grok/averse-au-loin', alt: c.s('radar.lire.alt'), cadrage: '70% 50%', classe: 'lire-photo', sizes: '(max-width: 860px) 100vw, 50vw', attrs: 'data-fx="parallaxe"' })}
+<section class="lire conteneur" id="lire" data-lire>
+  <div class="averse" data-averse data-effet="averse-en-marche" data-visuel>
+    ${c.media({ nom: 'grok/averse-au-loin', alt: c.s('radar.lire.alt'), cadrage: '70% 50%', classe: 'averse-photo', sizes: '(max-width: 860px) 100vw, 50vw' })}
+    <div class="averse-carte" aria-hidden="true">${carteFrance(c, { classe: 'france--averse', aria: '' })}</div>
+    <div class="averse-cellule" data-cellule aria-hidden="true"><i class="ac-faible"></i><i class="ac-moderee"></i><i class="ac-forte"></i></div>
+    <p class="averse-heure" data-averse-heure aria-hidden="true">${c.t('radar.lire.ilya')}</p>
+  </div>
   <div>
     <p class="surtitre">${c.t('radar.lire.surtitre')}</p>
     <h2 data-anime="lignes">${c.t('radar.lire.titre')}</h2>
-    <p class="echelle-pluie" data-anime aria-hidden="true"><span>${c.t('radar.lire.faible')}</span><i></i><span>${c.t('radar.lire.forte')}</span></p>
+    <p class="echelle-pluie" data-anime aria-hidden="true"><span data-niveau>${c.t('radar.lire.faible')}</span><i><b data-echelle-curseur></b></i><span data-niveau>${c.t('radar.lire.moderee')}</span><span data-niveau>${c.t('radar.lire.forte')}</span></p>
     <ol class="conseils" data-anime="cascade">
       <li><strong>${c.t('radar.lire.c1t')}</strong> ${c.t('radar.lire.c1')}</li>
       <li><strong>${c.t('radar.lire.c2t')}</strong> ${c.t('radar.lire.c2')}</li>

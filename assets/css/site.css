@@ -700,3 +700,327 @@ html:not(.js) .radar-bandeau { order: -1; }
   html:not(.js) [data-nav] ul { column-gap: 18px; }
   html:not(.js) .ciel { min-height: 0; }
 }
+
+/* ======================================================================
+   v2 · la météo réelle pilote le mouvement
+   ====================================================================== */
+:root {
+  --etoiles: radial-gradient(1.4px 1.4px at 8% 14%, #fff 60%, transparent 62%), radial-gradient(1px 1px at 18% 32%, #fff 60%, transparent 62%),
+    radial-gradient(1.6px 1.6px at 27% 9%, #fff 60%, transparent 62%), radial-gradient(1px 1px at 36% 24%, #fff 60%, transparent 62%),
+    radial-gradient(1.2px 1.2px at 44% 6%, #fff 60%, transparent 62%), radial-gradient(1px 1px at 53% 30%, #fff 60%, transparent 62%),
+    radial-gradient(1.5px 1.5px at 61% 12%, #fff 60%, transparent 62%), radial-gradient(1px 1px at 69% 27%, #fff 60%, transparent 62%),
+    radial-gradient(1.3px 1.3px at 77% 8%, #fff 60%, transparent 62%), radial-gradient(1px 1px at 85% 22%, #fff 60%, transparent 62%),
+    radial-gradient(1.6px 1.6px at 92% 11%, #fff 60%, transparent 62%), radial-gradient(1px 1px at 12% 44%, #fff 60%, transparent 62%),
+    radial-gradient(1.2px 1.2px at 31% 48%, #fff 60%, transparent 62%), radial-gradient(1px 1px at 58% 46%, #fff 60%, transparent 62%),
+    radial-gradient(1.3px 1.3px at 74% 41%, #fff 60%, transparent 62%), radial-gradient(1px 1px at 89% 47%, #fff 60%, transparent 62%);
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Ciel réel : nuages WebGL entre la photo et la pluie, photo qui suit légèrement le pointeur */
+.ciel-nuages { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+.ciel-photo img { transform: translate3d(var(--px, 0px), var(--py, 0px), 0) scale(1.06); transition: none; }
+
+/* Champ de vent derrière la section « Maintenant » */
+.maintenant { position: relative; overflow: hidden; }
+.champ-vent { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.maintenant-cadre { position: relative; z-index: 1; }
+
+/* Journée en accéléré : le ciel de la section suit l'heure lue */
+.heures--journee { position: relative; overflow: hidden; background: #2f6fd1; color: #fff; }
+.heures-ciel { position: absolute; inset: 0; z-index: 0; background: linear-gradient(180deg, #2f6fd1 0%, #6fa4e6 62%, #cfe3fb 100%); }
+.heures-ciel::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(6, 16, 40, .34), rgba(6, 16, 40, .08) 42%, rgba(6, 16, 40, 0) 60%); }
+.heures-etoiles { position: absolute; inset: 0 0 35% 0; opacity: 0; background-image: var(--etoiles); background-size: 520px 300px; transition: opacity .4s; }
+.heures--journee > .conteneur { position: relative; z-index: 1; }
+.heures--journee .surtitre, .heures--journee h2, .heures--journee .tete-note { color: #fff; }
+.heures--journee .tete-note { max-width: 34em; font-weight: 500; text-shadow: 0 1px 8px rgba(6, 16, 40, .35); }
+.heures--journee .tete-section--ligne { align-items: end; }
+.heures-affiche { flex: none; text-align: right; text-shadow: 0 2px 18px rgba(6, 16, 40, .35); }
+.heures-affiche p { margin: 0; }
+.ha-heure { font-weight: 700; font-size: .95rem; letter-spacing: .16em; text-transform: uppercase; }
+.ha-temp { font-family: var(--police-titres); font-weight: 200; font-size: clamp(3.6rem, 2rem + 4vw, 6.4rem); line-height: .86; font-variant-numeric: lining-nums; }
+.ha-lib { display: inline-flex; align-items: center; gap: .4em; font-weight: 700; }
+.ha-lib .ico { width: 1.3em; height: 1.3em; }
+.heures--journee .courbe-reperes text { fill: var(--marine); }
+.heures--journee .courbe-reperes .courbe-t { fill: var(--nuit); }
+.heures--journee .courbe-indice { color: var(--marine); font-weight: 600; }
+.heures--journee[data-sombre] .courbe-reperes text, .heures--journee[data-sombre] .courbe-reperes .courbe-t { fill: #e6eefa; }
+.heures--journee[data-sombre] .courbe-indice { color: #e6eefa; }
+.heures--journee[data-sombre] .courbe-reperes circle { fill: var(--nuit); }
+.heures-liste li { transition: background .3s, color .3s, transform .3s; }
+.heures-liste li.est-active { background: var(--marine); color: #fff; transform: translateY(-4px); }
+.heures-liste li.est-active .h, .heures-liste li.est-active .pp { color: #dbe7fb; }
+.heures--journee.est-epinglee { min-height: 100vh; min-height: 100svh; padding-top: calc(var(--entete-h) + 18px); padding-bottom: 18px; display: flex; flex-direction: column; justify-content: center; }
+.heures--journee.est-epinglee .heures-liste { margin-top: 12px; }
+@media (max-width: 860px) { .heures--journee .tete-section--ligne { flex-wrap: wrap; } .heures-affiche { text-align: left; } }
+
+/* Vigilance qui se répand : carte en grand, taches d'encre, départements en orange soulevés */
+@media (min-width: 861px) { .vigilance-accueil { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); } }
+@media (max-width: 860px) { .vigilance-accueil .vig-carte { order: -1; max-width: none; } }
+.france .dep.attente { fill: #d9e3f1; }
+.encre-tache { stroke: #fff; stroke-width: .4; }
+.encre-tache--jaune { fill: var(--jaune); }
+.encre-tache--orange { fill: var(--orange); }
+.encre-tache--rouge { fill: var(--rouge); }
+.dep.souleve { transform-box: fill-box; transform-origin: center; transform: translateY(-1.4px); filter: drop-shadow(0 2px 2px rgba(110, 45, 0, .38)); }
+html:not(.calme) .dep--orange.souleve { animation: dep-orange 2.8s ease-in-out infinite; }
+html:not(.calme) .dep--rouge.souleve { animation: dep-rouge 2.4s ease-in-out infinite; }
+@keyframes dep-orange { 50% { fill: #ffb35c; } }
+@keyframes dep-rouge { 50% { fill: #f0675a; } }
+
+/* Écran radar : anneaux de distance, point de la commune, faisceau continu, grain */
+.radar-anneau { fill: none; stroke: rgba(140, 192, 255, .34); stroke-width: .5; stroke-dasharray: 2 2.5; }
+.radar-km { font: 600 6px var(--police-texte); fill: rgba(205, 226, 255, .8); }
+.radar-ici { fill: var(--soleil); stroke: #fff; stroke-width: .8; }
+.radar-ici-onde { fill: none; stroke: var(--soleil); stroke-width: .9; transform-box: fill-box; transform-origin: center; }
+html:not(.calme) .radar-ici-onde { animation: onde-ici 2.4s ease-out infinite; }
+@keyframes onde-ici { from { transform: scale(1); opacity: .95; } to { transform: scale(4.5); opacity: 0; } }
+.radar-ici-nom { font: 700 7.5px var(--police-titres); fill: #fff; paint-order: stroke; stroke: rgba(5, 13, 34, .85); stroke-width: 2.2px; }
+.faisceau--continu { opacity: 1; mix-blend-mode: screen; }
+.radar-scene--ecran::after, .radar-scene--grande::after { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: var(--grain); opacity: .07; mix-blend-mode: screen; border-radius: 12px; }
+.radar-accueil .radar-heure { font-size: clamp(1.3rem, 1rem + 1.2vw, 2.3rem); }
+.radar-accueil .radar-canvas { filter: drop-shadow(0 0 5px rgba(120, 190, 255, .45)); }
+
+/* Bandes de chaleur des seize jours */
+.bandes { list-style: none; margin: 4px 0 20px; padding: 0; display: grid; grid-template-columns: repeat(16, minmax(44px, 1fr)); gap: 3px; border-radius: 18px; overflow-x: auto; overflow-y: hidden; }
+.bande-j button { position: relative; display: flex; flex-direction: column; justify-content: space-between; align-items: center; width: 100%; height: clamp(108px, 15vh, 150px); padding: 10px 2px; border: 0; background: var(--teinte); color: var(--nuit); font: inherit; cursor: pointer; overflow: hidden; transition: filter .25s, transform .25s; }
+.bande-j button:hover, .bande-j button:focus-visible { filter: brightness(1.07) saturate(1.1); }
+.bande-j button:focus-visible { outline: 3px solid var(--marine); outline-offset: -3px; }
+.bande-j--froid button { color: #fff; }
+.bj-nom { font-size: .76rem; font-weight: 700; white-space: nowrap; }
+.bj-t { font-family: var(--police-titres); font-weight: 600; font-size: clamp(1rem, .8rem + .5vw, 1.3rem); }
+.bj-gouttes i { position: absolute; top: -12px; width: 2px; height: 11px; border-radius: 2px; background: rgba(10, 26, 58, .5); }
+.bj-gouttes i:nth-child(1) { left: 28%; } .bj-gouttes i:nth-child(2) { left: 52%; } .bj-gouttes i:nth-child(3) { left: 74%; }
+html:not(.calme) .bj-gouttes i { animation: goutte-bande 1.5s linear infinite; }
+html:not(.calme) .bj-gouttes i:nth-child(2) { animation-delay: -.6s; } html:not(.calme) .bj-gouttes i:nth-child(3) { animation-delay: -1.1s; }
+@keyframes goutte-bande { to { transform: translateY(175px); } }
+.jour.eclaire { animation: jour-eclaire 1.6s ease; }
+@keyframes jour-eclaire { 0%, 55% { box-shadow: 0 0 0 3px var(--soleil-fonce); transform: translateY(-4px); } 100% { box-shadow: 0 0 0 0 transparent; transform: none; } }
+
+/* Grandes villes : les cartes glissent au défilement, sans épinglage */
+.villes { padding-block: clamp(56px, 8vw, 110px); }
+.villes-piste { perspective: 1400px; will-change: transform; }
+.ville { height: min(60vh, 520px); flex: none; }
+@media (max-width: 760px) { .villes { padding-block: 64px; } .ville { height: auto; } }
+
+/* L'appli : section épinglée, étapes qui s'allument, grand téléphone */
+.etapes-appli { list-style: none; margin: 20px 0 26px; padding: 0; display: grid; gap: 8px; }
+.appli .etape { min-height: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: start; padding: 14px 16px; border-radius: 18px; max-width: 34em; opacity: .55; transition: opacity .4s var(--courbe), background .4s var(--courbe); }
+.appli .etape.est-active { opacity: 1; background: rgba(255, 255, 255, .1); }
+.appli .etape h3 { margin: 0 0 4px; font-size: clamp(1.15rem, 1rem + .6vw, 1.5rem); }
+.appli .etape p:last-child { margin: 0; font-size: 1rem; }
+.appli .etape-ico { width: 46px; height: 46px; border-radius: 14px; }
+.appli.est-epinglee { min-height: 100vh; min-height: 100svh; padding-top: calc(var(--entete-h) + 16px); padding-bottom: 20px; display: flex; align-items: center; }
+.appli.est-epinglee .appli-grille { flex: none; align-items: center; }
+.appli.est-epinglee .telephone { position: relative; top: auto; width: min(330px, 100%); max-height: min(78vh, 680px); }
+html.calme .appli .etape { opacity: 1; }
+
+/* Radiosondage : le ballon monte, l'altimètre compte */
+.sonde { position: relative; overflow: hidden; min-height: 440px; background: linear-gradient(180deg, #8fb8ea, #f2d3b6); isolation: isolate; }
+.sonde-sol { position: absolute; inset: 0; border-radius: 0; will-change: transform, opacity; }
+.sonde .mention-ia { top: 12px; bottom: auto; }
+.sonde-ciel { position: absolute; inset: 0; opacity: 0; background: linear-gradient(180deg, #02050f 0%, #0a1a3a 45%, #1d3a72 80%, #3f6fae 100%); }
+.sonde-etoiles { position: absolute; inset: 0 0 30% 0; opacity: 0; background-image: var(--etoiles); background-size: 420px 260px; }
+.sonde-ballon { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-origin: 0 0; opacity: 0; will-change: transform; --br: 20px; --fil: 120px; }
+.sb-enveloppe { position: absolute; left: calc(var(--br) * -1); top: calc(var(--br) * -1.05); width: calc(var(--br) * 2); height: calc(var(--br) * 2.15); border-radius: 50% 50% 47% 47% / 56% 56% 44% 44%; background: radial-gradient(circle at 34% 30%, #fff 0%, #f1f3f7 45%, #c3cad7 100%); box-shadow: 0 0 calc(var(--br) * .7) rgba(255, 255, 255, .35); transform-origin: 50% 62%; }
+.sb-fil { position: absolute; left: -.5px; top: calc(var(--br) * 1.08); width: 1px; height: var(--fil); background: rgba(255, 255, 255, .85); }
+.sb-boite { position: absolute; left: calc(var(--br) * -.27); top: calc(var(--br) * 1.08 + var(--fil)); width: calc(var(--br) * .54); height: calc(var(--br) * .4); border-radius: 1px; background: #e9edf3; }
+.sb-parachute { position: absolute; left: calc(var(--br) * -.9); top: calc(var(--br) * 1.08 + var(--fil) - var(--br) * 1.4); width: calc(var(--br) * 1.8); opacity: 0; overflow: visible; }
+.sb-parachute path:first-child { fill: var(--soleil); }
+.sb-suspentes { fill: none; stroke: #fff; stroke-width: .8; }
+.sb-eclat { position: absolute; left: calc(var(--br) * -1.7); top: calc(var(--br) * -1.7); width: calc(var(--br) * 3.4); height: calc(var(--br) * 3.4); border-radius: 50%; opacity: 0; background: repeating-conic-gradient(rgba(255, 255, 255, .95) 0 5deg, transparent 5deg 30deg); -webkit-mask: radial-gradient(circle, transparent 34%, #000 36%, #000 58%, transparent 62%); mask: radial-gradient(circle, transparent 34%, #000 36%, #000 58%, transparent 62%); }
+.sonde-instruments { position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 2; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 12px 16px; border-radius: 16px; background: rgba(5, 13, 34, .8); color: #fff; }
+.sonde-instruments dt { font-size: .74rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .9; }
+.sonde-instruments dd { margin: 0; font: 600 clamp(1.05rem, .8rem + .8vw, 1.6rem) var(--police-titres); font-variant-numeric: tabular-nums; white-space: nowrap; }
+@media (max-width: 860px) { .sonde { order: 2; min-height: 72vh; } }
+@media (max-width: 420px) { .sonde-instruments { grid-template-columns: 1fr; gap: 2px; } .sonde-instruments div { display: flex; justify-content: space-between; align-items: baseline; } }
+
+/* ---------- Ma commune v2 ---------- */
+/* Fenêtre unique dont l'effet suit la météo : gouttes, givre sous 1 °C, reflet de soleil qui passe */
+.vitre { aspect-ratio: 4 / 4.7; }
+.vitre-reflet { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, .34) 45%, rgba(255, 255, 255, .1) 52%, transparent 62%); background-size: 260% 100%; background-position: 130% 0; }
+.vitre--soleil .vitre-reflet { opacity: 1; }
+html:not(.calme) .vitre--soleil .vitre-reflet { animation: vitre-reflet 7s ease-in-out infinite; }
+@keyframes vitre-reflet { 0%, 50% { background-position: 130% 0; } 100% { background-position: -40% 0; } }
+.vitre--givre .vitre-givre { background-image: radial-gradient(120% 90% at 50% 50%, transparent 46%, rgba(235, 244, 255, .82) 100%), var(--grain); background-size: auto, 220px 220px; mix-blend-mode: normal; }
+
+/* Seize jours : aujourd'hui mis en avant, gouttes qui tombent sur les jours de pluie */
+.seize-jour--auj { box-shadow: inset 0 0 0 2px var(--soleil); background: linear-gradient(90deg, #fff4e4, var(--blanc) 45%); }
+.seize-pluie { position: relative; }
+.seize-gouttes i { position: absolute; top: -10px; width: 2px; height: 7px; border-radius: 2px; background: var(--bleu-vif); opacity: 0; }
+.seize-gouttes i:first-child { right: 4px; } .seize-gouttes i:last-child { right: 12px; }
+html:not(.calme) .seize-gouttes i { animation: goutte-seize 1.7s ease-in infinite; }
+html:not(.calme) .seize-gouttes i:last-child { animation-delay: .8s; }
+@keyframes goutte-seize { 0% { transform: translateY(-4px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(14px); opacity: 0; } }
+
+/* Photo animée en WebGL (herbes au vent, eau de la crue) */
+.photo-gl { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; border-radius: inherit; pointer-events: none; }
+.a-gl img { opacity: 0; }
+.a-gl .mention-ia { z-index: 2; }
+
+/* Coucher de soleil au défilement : le ciel change de teinte, les étoiles s'allument */
+.soleil-ciel { position: absolute; inset: 0; z-index: 1; mix-blend-mode: color; opacity: .9; pointer-events: none; }
+.soleil-etoiles { position: absolute; inset: 0 0 40% 0; z-index: 1; opacity: 0; background-image: var(--etoiles); background-size: 640px 320px; pointer-events: none; }
+.arc-maintenant circle { fill: none; stroke: #fff; stroke-width: 2; stroke-dasharray: 3 3; }
+.arc-maintenant text { font: 700 14px var(--police-texte); fill: #fff; }
+.arc-heure { margin: 6px 0 4px; text-align: center; font: 600 clamp(1.4rem, 1rem + 1.5vw, 2.2rem) var(--police-titres); font-variant-numeric: tabular-nums; }
+
+/* ---------- Radar & carte v2 ---------- */
+.radar-scene--grande .radar-canvas { filter: drop-shadow(0 0 6px rgba(120, 190, 255, .45)); }
+/* Carte de chaleur sous les contours, en mode « températures » */
+.chaleur { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 8px; image-rendering: auto; transition: opacity .5s var(--courbe); }
+.calques-carte[data-fond="temperatures"] .dep { fill: transparent; stroke: rgba(255, 255, 255, .75); }
+.calques-carte[data-fond="vigilance"] .chaleur { opacity: 0; }
+/* Averse en marche */
+.averse { position: relative; overflow: hidden; aspect-ratio: 4 / 3.4; border-radius: var(--rayon); background: var(--nuit); box-shadow: var(--ombre); }
+.averse-photo { position: absolute; inset: 0; border-radius: 0; opacity: .38; }
+.averse .mention-ia { z-index: 4; top: 12px; bottom: auto; }
+.averse-carte { position: absolute; inset: 8% 10%; }
+.averse-carte .france { width: 100%; height: 100%; }
+.france--averse .dep { fill: rgba(255, 255, 255, .04); stroke: rgba(200, 225, 255, .45); stroke-width: .45; }
+.averse-cellule { position: absolute; left: 0; top: 0; width: 46%; aspect-ratio: 1.5; z-index: 2; pointer-events: none; will-change: transform; }
+.averse-cellule i { position: absolute; border-radius: 50%; filter: blur(10px); }
+.ac-faible { inset: 0; background: radial-gradient(closest-side, rgba(161, 214, 245, .75), rgba(161, 214, 245, 0)); }
+.ac-moderee { inset: 18% 20%; background: radial-gradient(closest-side, rgba(63, 133, 221, .95), rgba(63, 133, 221, 0)); }
+.ac-forte { inset: 34% 36%; background: radial-gradient(closest-side, rgba(246, 211, 60, .95), rgba(211, 58, 44, .6) 60%, rgba(211, 58, 44, 0)); }
+.averse-heure { position: absolute; left: 14px; bottom: 12px; z-index: 3; margin: 0; padding: 6px 12px; border-radius: 999px; background: rgba(5, 13, 34, .8); color: #fff; font-weight: 700; font-variant-numeric: tabular-nums; }
+.echelle-pluie { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 8px; }
+.echelle-pluie i { grid-column: 1 / -1; grid-row: 1; position: relative; display: block; }
+.echelle-pluie b { position: absolute; top: 50%; left: 0; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px var(--nuit), 0 4px 10px rgba(10, 26, 58, .35); transition: left .2s linear; }
+.echelle-pluie span { grid-row: 2; color: var(--texte-doux); transition: color .3s; }
+.echelle-pluie span:nth-of-type(2) { text-align: center; } .echelle-pluie span:nth-of-type(3) { text-align: right; }
+.echelle-pluie span.est-active { color: var(--nuit); text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; text-decoration-color: var(--soleil); }
+.conseils li { transition: opacity .4s, transform .4s; }
+html.js:not(.calme) .lire .conseils li { opacity: .55; }
+html.js:not(.calme) .lire .conseils li.est-active { opacity: 1; transform: translateX(6px); }
+@media (max-width: 860px) { .averse { order: -1; } }
+
+/* ---------- Vigilance v2 ---------- */
+.bande-remplie::before { content: ''; position: absolute; left: -10%; right: -10%; top: -9px; height: 18px; border-radius: 50%; background: inherit; }
+.bande.est-niveau.pulse { box-shadow: inset 0 0 0 2px rgba(13, 47, 109, .12), 0 0 0 0 rgba(240, 138, 36, .55); }
+html:not(.calme) .bande.est-niveau.pulse { animation: niveau-pulse 2.4s ease-out infinite; }
+@keyframes niveau-pulse { 0% { box-shadow: inset 0 0 0 2px rgba(13, 47, 109, .12), 0 0 0 0 rgba(240, 138, 36, .55); } 100% { box-shadow: inset 0 0 0 2px rgba(13, 47, 109, .12), 0 0 0 22px rgba(240, 138, 36, 0); } }
+.vig-page-grille { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); }
+@media (max-width: 860px) { .vig-page-grille { grid-template-columns: 1fr; } }
+.dep.surligne { stroke: var(--nuit); stroke-width: 1.6; }
+.vig-item { transition: box-shadow .25s, transform .25s; }
+.vig-item.surligne { box-shadow: 0 0 0 2px var(--marine); transform: translateX(4px); }
+/* Les trois couleurs empilées */
+.couleurs { display: block; }
+.couleurs-tete { display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(24px, 5vw, 72px); align-items: center; margin-bottom: clamp(28px, 4vw, 56px); }
+.couleurs-photo { aspect-ratio: 16 / 10; }
+.planches { list-style: none; margin: 0; padding: 0; display: grid; gap: 28px; }
+.planche { position: sticky; top: calc(var(--entete-h) + 24px + var(--i) * 18px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 12px 40px; align-content: center; min-height: min(56vh, 460px); padding: clamp(22px, 4vw, 48px); border-radius: 28px; color: var(--nuit); box-shadow: 0 30px 60px -30px rgba(10, 26, 58, .45); transform-origin: 50% 0; }
+.planche--jaune { background: var(--jaune); }
+.planche--orange { background: var(--orange); }
+.planche--rouge { background: var(--rouge); color: #fff; }
+.planche-tete { display: flex; gap: 16px; align-items: center; grid-column: 1; }
+.planche-ico { display: grid; place-items: center; flex: none; width: 64px; height: 64px; border-radius: 20px; background: rgba(255, 255, 255, .55); }
+.planche--rouge .planche-ico { background: rgba(255, 255, 255, .2); }
+.planche-ico .ico { width: 34px; height: 34px; }
+.planche h3 { margin: 0; font-size: clamp(1.8rem, 1.2rem + 2.2vw, 3.2rem); line-height: 1.1; }
+.planche-sens { margin: 4px 0 0; font-weight: 700; font-size: 1.1rem; }
+.planche-texte { grid-column: 1; margin: 0; font-size: 1.08rem; max-width: 30em; }
+.planche-reflexes { grid-column: 2; grid-row: 1 / span 2; align-self: center; list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.planche-reflexes li { padding: 14px 16px; border-radius: 16px; background: rgba(255, 255, 255, .6); font-weight: 600; }
+.planche--rouge .planche-reflexes li { background: rgba(0, 0, 0, .2); }
+@media (max-width: 860px) { .couleurs-tete { grid-template-columns: 1fr; } .planche { position: relative; top: auto; grid-template-columns: 1fr; min-height: 0; } .planche-reflexes { grid-column: 1; grid-row: auto; } }
+
+/* ---------- Application v2 ---------- */
+.emergence-nuage { position: absolute; bottom: -4%; width: 70%; height: 46%; z-index: 3; pointer-events: none; background: url('/assets/images/grok/mer-de-nuages-1168.webp') center 72% / cover; -webkit-mask-image: radial-gradient(70% 90% at 50% 100%, #000 40%, transparent 72%); mask-image: radial-gradient(70% 90% at 50% 100%, #000 40%, transparent 72%); }
+.emergence-nuage--g { left: -8%; } .emergence-nuage--d { right: -8%; background-position: 70% 72%; }
+.fonctions-grille2 { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(24px, 5vw, 80px); align-items: center; }
+.fonctions-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.fonctions-liste .fonction { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: center; padding: 14px 18px; box-shadow: none; background: transparent; border-radius: 18px; cursor: pointer; transition: background .35s, box-shadow .35s; }
+.fonctions-liste .fonction h3 { margin: 0 0 2px; font-size: 1.15rem; }
+.fonctions-liste .fonction p { margin: 0; color: var(--texte-doux); }
+.fonctions-liste .fonction-ico { margin: 0; }
+.fonctions-liste .fonction.est-active { background: var(--blanc); box-shadow: var(--ombre); }
+.fonctions.est-epinglee { min-height: 100vh; min-height: 100svh; padding-top: calc(var(--entete-h) + 16px); padding-bottom: 16px; display: flex; align-items: center; }
+.fonctions.est-epinglee .fonctions-grille2 { flex: none; }
+.telephone--fonctions { position: relative; top: auto; width: min(300px, 100%); max-height: min(72vh, 620px); }
+.ea-favoris { list-style: none; margin: 0; padding: 6px; border-radius: 14px; background: rgba(255, 255, 255, .92); }
+.ea-favoris li { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; padding: 10px 8px; border-bottom: 1px solid var(--ciel); font-weight: 600; }
+.ea-favoris li:last-child { border: 0; }
+.ea-favoris .ico { color: var(--soleil-fonce); }
+.ea-bandes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(16, 1fr); gap: 2px; height: 120px; border-radius: 12px; overflow: hidden; }
+.ea-bandes li { background: var(--teinte); }
+.installer-visuel { position: relative; }
+.install-etat { position: absolute; left: 50%; bottom: 8%; transform: translateX(-50%); width: min(78%, 320px); display: grid; gap: 8px; padding: 14px 16px; border-radius: 18px; background: rgba(5, 13, 34, .86); color: #fff; font-weight: 700; box-shadow: 0 20px 40px -20px rgba(0, 0, 0, .6); }
+.install-etat i { display: block; height: 6px; border-radius: 6px; background: rgba(255, 255, 255, .2); overflow: hidden; }
+.install-etat b { display: block; height: 100%; background: var(--soleil); transform-origin: 0 50%; transform: scaleX(1); }
+.installer[data-install-etat="3"] .install-etat b { background: var(--vert); }
+.etapes-install li { transition: opacity .4s; }
+html.js:not(.calme) .installer .etapes-install li { opacity: .5; }
+html.js:not(.calme) .installer .etapes-install li.est-active { opacity: 1; }
+@media (max-width: 860px) { .fonctions-grille2 { grid-template-columns: 1fr; } .fonctions .telephone-colonne { order: -1; } .telephone--fonctions { width: min(230px, 66vw); } }
+
+/* ---------- Contact v2 : formulaire en trois étapes, ballon qui monte ---------- */
+.formulaire--etapes { padding-left: clamp(18px, 3vw, 32px); }
+.form-etape { margin: 0 0 18px; padding: 0 0 16px; border: 0; border-bottom: 1px solid var(--ligne); }
+.form-titre, .sujets legend { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; font-weight: 700; font-size: 1.05rem; }
+.form-num { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--ciel); color: var(--marine); font-weight: 700; transition: background .3s, color .3s; }
+.form-etape.est-faite .form-num { background: var(--marine); color: #fff; }
+.sujets.form-etape { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.sujets.form-etape legend { grid-column: 1 / -1; }
+.sujets.form-etape .sujet span { display: flex; width: 100%; min-height: 64px; padding: 12px 16px; border-radius: 16px; font-size: 1.02rem; }
+.ballon-rail { position: absolute; left: -46px; top: 24px; bottom: 24px; width: 30px; --k: 0; }
+.br-fil { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: repeating-linear-gradient(180deg, color-mix(in srgb, var(--marine) 35%, transparent) 0 6px, transparent 6px 12px); }
+.br-pion { position: absolute; left: 50%; bottom: 0; width: 26px; margin-left: -13px; }
+.br-pion svg { display: block; width: 100%; }
+.br-alt { position: absolute; left: 50%; top: -20px; transform: translateX(-50%); font-size: .78rem; font-weight: 700; color: var(--marine); white-space: nowrap; font-variant-numeric: tabular-nums; }
+@media (max-width: 1100px) { .ballon-rail { display: none; } }
+
+/* ---------- Partout v2 ---------- */
+/* Voile « front de nuages » */
+.front { height: 90px; }
+.front--haut { top: -89px; }
+.front--bas { bottom: -89px; }
+/* Altimètre : repères des sections, sur grand écran */
+.altimetre { position: fixed; right: max(14px, env(safe-area-inset-right, 0px)); top: 50%; z-index: 40; transform: translateY(-50%); padding: 10px 0; }
+.altimetre[hidden] { display: none; }
+.altimetre ol { position: relative; list-style: none; margin: 0; padding: 0 0 0 14px; display: grid; gap: 6px; border-left: 2px solid color-mix(in srgb, var(--marine) 25%, transparent); }
+.altimetre a { position: relative; display: flex; align-items: center; justify-content: flex-end; min-height: 24px; text-decoration: none; }
+.altimetre a::before { content: ''; position: absolute; left: -20px; width: 10px; height: 2px; background: color-mix(in srgb, var(--marine) 45%, transparent); }
+.altimetre span { padding: 3px 8px; border-radius: 999px; font-size: .74rem; font-weight: 700; color: var(--marine); background: rgba(255, 255, 255, .9); opacity: 0; transform: translateX(6px); transition: opacity .25s, transform .25s; white-space: nowrap; }
+.altimetre a:hover span, .altimetre a:focus-visible span { opacity: 1; transform: none; }
+.altimetre a[aria-current]::before { width: 16px; left: -23px; background: var(--soleil-fonce); height: 3px; }
+.altimetre-curseur { position: absolute; left: -5px; top: 0; width: 10px; height: 10px; margin-top: -5px; border-radius: 50%; background: var(--soleil); box-shadow: 0 0 0 3px #fff; pointer-events: none; }
+@media (max-width: 1439px), (max-height: 600px) { .altimetre { display: none; } }
+.altimetre { transition: opacity .4s, visibility .4s; }
+.altimetre.au-debut { opacity: 0; visibility: hidden; }
+
+/* ---------- Corrections de l'audit v2 ---------- */
+html.js .entete-rangee { height: 64px; flex-wrap: nowrap; }
+.entete-actions { flex: none; }
+.entete-actions .bouton { white-space: nowrap; }
+.heures--journee .heures-liste li { color: var(--texte); }
+.heures--journee .heures-liste li.est-active { color: #fff; }
+.heures--journee .courbe-indice { display: inline-block; padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, .88); color: var(--marine); }
+.heures--journee[data-sombre] .courbe-indice { background: rgba(5, 13, 34, .7); color: #e6eefa; }
+.radar-scene--ecran { overflow: hidden; border-radius: 12px; }
+.faisceau--continu { inset: 0; }
+.radar-etiquettes { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.radar-etiquettes span { position: absolute; transform: translate(-50%, -50%); padding: 2px 8px; border-radius: 999px; background: rgba(5, 13, 34, .8); color: #e6eefa; font-size: .78rem; font-weight: 700; white-space: nowrap; }
+.radar-etiquettes .radar-ici-nom { transform: translate(0, -10%); color: #fff; font-size: .85rem; }
+@media (max-width: 480px) { .radar-etiquettes .radar-km { display: none; } }
+.bandes { position: relative; z-index: 2; }
+.sonde-instruments dt { font-size: .8rem; }
+.altimetre span { font-size: .8rem; visibility: hidden; transition: none; }
+.altimetre a:hover span, .altimetre a:focus-visible span { visibility: visible; }
+.arc-maintenant { opacity: 0; }
+html:not(.js) .arc-maintenant { display: none; }
+.appli.est-epinglee .mention-ia { top: calc(var(--entete-h) + 10px); bottom: auto; }
+
+.altimetre span { background: #fff; }
+@media (max-width: 900px) {
+  .bandes { grid-template-columns: repeat(8, minmax(0, 1fr)); overflow: hidden; }
+  .bande-j button { height: 92px; }
+  @keyframes goutte-bande { to { transform: translateY(110px); } }
+}
+@media (max-width: 420px) { .bandes { grid-template-columns: repeat(4, minmax(0, 1fr)); } .bande-j button { height: 72px; padding-block: 8px; } }
+/* Ciel : l'espace de l'en-tête est une marge intérieure (et non une marge extérieure qui fusionne avec la page) ; les calques commencent sous l'en-tête. */
+.ciel { margin-top: 0; padding-top: var(--entete-h); min-height: 100vh; min-height: 100svh; }
+.ciel-fond, .ciel-nuages, .ciel-calque, .ciel-voile { top: var(--entete-h); height: auto; bottom: 0; }
+.ciel-nuages, .ciel-calque { height: calc(100% - var(--entete-h)); }
+html:not(.js) .ciel { padding-top: 0; min-height: calc(100svh - var(--entete-h)); }
+html:not(.js) .ciel-fond, html:not(.js) .ciel-voile { top: 0; }

@@ -1,11 +1,13 @@
 /* Pages intérieures : chacune a son ouverture (intro, arrivée sous le voile) et ses effets propres. */
-import { etat, boucle } from './socle/index.js?v=1';
-import * as M from './meteo.js?v=1';
-import * as E from './effets-meteo.js?v=1';
-import { Radar } from './radar.js?v=1';
-import { rouleaux, figureCiel } from './ciel.js?v=1';
-import { init as initPluie } from './vitre.js?v=1';
-import { listeHeuresHTML, majTexte, remplacerIcone } from './rendu.js?v=1';
+import { etat, boucle } from './socle/index.js?v=2';
+import * as M from './meteo.js?v=2';
+import * as E from './effets-meteo.js?v=2';
+import { Radar } from './radar.js?v=2';
+import { rouleaux, figureCiel } from './ciel.js?v=2';
+import { init as initPluie } from './vitre.js?v=2';
+import { listeHeuresHTML, majTexte, remplacerIcone } from './rendu.js?v=2';
+import * as V from './v2-pages.js?v=2';
+import * as A from './v2-accueil.js?v=2';
 
 const gsap = window.gsap;
 const calme = () => etat.calme || !gsap;
@@ -18,13 +20,13 @@ const nomDep = (code) => { const p = $(`svg.france [data-dep="${code}"] title`);
 
 /* ========== Ma commune ========== */
 const commune = (() => {
-  let lieu = null, crb = null, vitreFaite = false, modele = null;
+  let lieu = null, crb = null, vitreFaite = false, modele = null, herbesCtl = null, coucherCtl = null, zoomer = null;
   const niveaux = () => { const v = M.vigilance; const n = {}; if (!v) return n; for (const [niv, , deps] of v.jours.aujourdhui) for (const d of deps) if (!n[d] || v.niveaux[niv] > v.niveaux[n[d]]) n[d] = niv; return n; };
   function seizeHTML(jours) {
-    return jours.map((j, i) => `<li class="seize-jour"><p class="seize-date">${M.jourCourt(j.date, i)}</p>
+    return jours.map((j, i) => `<li class="seize-jour${i === 0 ? ' seize-jour--auj' : ''}${j.pluie >= 1 ? ' seize-jour--pluie' : ''}"><p class="seize-date">${M.jourCourt(j.date, i)}</p>
       ${['matin', 'aprem'].map((k) => `<p class="seize-moment">${j[k] ? `${M.svgIcone(M.icone(j[k][1], 1))}<span class="visuellement-cache">${k === 'matin' ? 'Matin' : 'Après-midi'} </span><span>${M.deg(j[k][0])}</span>` : '<span>Non disponible</span>'}</p>`).join('')}
       <div class="seize-barre" role="img" style="--bas:${j.tmin};--haut:${j.tmax}" aria-label="De ${M.deg(j.tmin)} à ${M.deg(j.tmax)}"><span class="seize-min">${M.deg(j.tmin)}</span><span class="seize-piste"><i data-rail></i></span><span class="seize-max">${M.deg(j.tmax)}</span></div>
-      <p class="seize-pluie">${M.svgIcone('goutte', 'ico ico--mini')}${M.nombre(j.pluie)} mm</p></li>`).join('');
+      <p class="seize-pluie">${j.pluie >= 1 ? '<span class="seize-gouttes" aria-hidden="true"><i></i><i></i></span>' : ''}${M.svgIcone('goutte', 'ico ico--mini')}${M.nombre(j.pluie)} mm</p></li>`).join('');
   }
   function etatPour(m) {
     const quand = m.direct ? new Date() : new Date(`${m.maj}:00+01:00`);
@@ -43,8 +45,9 @@ const commune = (() => {
       fond.appendChild(f); actuelle && actuelle.remove();
       await new Promise((ok) => { if (img.complete && img.naturalWidth) ok(); else { img.addEventListener('load', ok, { once: true }); img.addEventListener('error', ok, { once: true }); } });
     }
-    fig.classList.toggle('vitre--givre', m.maintenant.t < 0);
-    const intensite = e === 'pluie' || e === 'orage' ? 1 : e === 'neige' ? 0.35 : 0.16;
+    fig.classList.toggle('vitre--givre', m.maintenant.t < 1 || e === 'neige');
+    fig.classList.toggle('vitre--soleil', e === 'clair' || e === 'crepuscule');
+    const intensite = { pluie: 1, orage: 1, neige: 0.3, nuageux: 0.42, brouillard: 0.3, nuit: 0.28, crepuscule: 0.2, clair: 0.12 }[e] ?? 0.35;
     try { await initPluie(root, { intensite, buee: true, eclaircie: true, focus: [0.5, 0.6] }); } catch (err) { console.warn('[vitre]', err); }
   }
   function appliquer(m, { anime = true } = {}) {
@@ -66,7 +69,8 @@ const commune = (() => {
     if (sz) { const ts = m.jours.flatMap((j) => [j.tmin, j.tmax]); sz.style.setProperty('--tmin', Math.min(...ts)); sz.style.setProperty('--tmax', Math.max(...ts)); sz.innerHTML = seizeHTML(m.jours); }
     const raf = $('[data-rafales]'); if (raf) raf.innerHTML = m.heures.slice(0, 12).map((h) => `<li style="--r:${Math.min(1, (h.raf || 0) / 60)}"><i></i><span>${+h.h} h</span></li>`).join('');
     rose.regler(mt.dir);
-    arc.regler(j0.lever, j0.coucher, m.direct ? null : m.maj.slice(11, 16));
+    herbesCtl && herbesCtl.regler(mt.vent, mt.dir);
+    coucherCtl && coucherCtl.regler(m.lieu, j0);
     vigLocale(m.lieu.dep);
     document.title = `${m.lieu.nom} : météo en direct et 16 jours · MétéoFR`;
     ST() && ST().refresh();
@@ -104,10 +108,9 @@ const commune = (() => {
     p.classList.add('dep--ici');
     const b = p.getBBox(), m = 26;
     const vb = `${(b.x - m).toFixed(1)} ${(b.y - m).toFixed(1)} ${(b.width + 2 * m).toFixed(1)} ${(b.height + 2 * m).toFixed(1)}`;
-    const plein = `0 0 ${svg.viewBox.baseVal.width} ${svg.viewBox.baseVal.height}`;
-    if (calme()) { svg.setAttribute('viewBox', vb); return; }
-    svg.setAttribute('viewBox', plein);
-    ST().create({ trigger: svg, start: 'top 75%', once: true, onEnter: () => gsap.to(svg, { attr: { viewBox: vb }, duration: 1.8, ease: 'power3.inOut' }) });
+    if (!svg.__plein) svg.__plein = `0 0 ${svg.viewBox.baseVal.width} ${svg.viewBox.baseVal.height}`;
+    if (!zoomer) zoomer = V.zoomDepartement(svg, $('#vigilance'));
+    zoomer(vb, svg.__plein);
   }
   function favoris() {
     const bouton = $('[data-favori]'), liste = $('[data-favoris]');
@@ -138,12 +141,13 @@ const commune = (() => {
       if (!calme()) {
         ST().create({ trigger: '[data-rose]', start: 'top 80%', once: true, onEnter: () => { rose.vu = true; rose.regler(rose.dir); } });
         gsap.fromTo('.rose-branche', { scale: 0, svgOrigin: '150 150' }, { scale: 1, svgOrigin: '150 150', duration: 0.9, stagger: 0.06, ease: 'back.out(1.6)', scrollTrigger: { trigger: '[data-rose]', start: 'top 80%', once: true } });
-        ST().create({ trigger: '[data-arc]', start: 'top 80%', once: true, onEnter: () => { arc.vu = true; gsap.to(arc.t, { k: arc.cible, duration: 2, ease: 'power2.out', onUpdate: () => arc.poser(arc.t.k) }); } });
         gsap.fromTo('.arc-trajet', { strokeDashoffset: 600 }, { strokeDashoffset: 0, duration: 2, ease: 'power2.out', scrollTrigger: { trigger: '[data-arc]', start: 'top 80%', once: true } });
         ST().create({ trigger: '[data-seize]', start: 'top 85%', once: true, onEnter: () => gsap.fromTo('[data-seize] [data-rail]', { scaleX: 0 }, { scaleX: 1, duration: 1, stagger: 0.05, ease: 'power3.out' }) });
         ST().create({ trigger: '[data-rafales]', start: 'top 90%', once: true, onEnter: () => gsap.fromTo('[data-rafales] i', { scaleY: 0 }, { scaleY: 1, duration: 0.8, stagger: 0.04, ease: 'power3.out' }) });
         gsap.fromTo('[data-vitre]', { y: 0 }, { y: -40, ease: 'none', scrollTrigger: { trigger: '[data-commune]', start: 'top top', end: 'bottom top', scrub: true } });
       }
+      coucherCtl = V.coucher($('[data-soleil]'), { lieu, jour: M.releve.jours[0] });
+      V.herbes($('[data-effet="herbes-au-vent"]')).then((c) => { herbesCtl = c; const mt = (modele || M.releve).maintenant; c.regler(mt.vent, mt.dir); });
       E.initRecherche($('#recherche'));
       favoris();
       if (estReleve) { appliquer({ ...M.releve, lieu: { ...M.releve.lieu, ...lieu } }, { anime: false }); }
@@ -197,6 +201,7 @@ const radar = (() => {
   function calques() {
     const carte = $('[data-calques]'); if (!carte) return;
     let moment = 'direct';
+    const chaleur = V.carteChaleur(carte);
     const peindre = () => {
       $$('.marqueur', carte).forEach((a) => {
         const [t, code, jour] = (a.dataset[moment] || '').split('|');
@@ -207,6 +212,7 @@ const radar = (() => {
         a.setAttribute('aria-label', `${a.dataset.ville} : ${M.deg(+t)}, ${M.libelle(+code)}`);
       });
       $('[data-calques-etat]').textContent = { direct: 'En direct\u00a0: conditions actuelles.', matin: 'Matin\u00a0: prévision de 9\u00a0h.', aprem: 'Après-midi\u00a0: prévision de 15\u00a0h.' }[moment];
+      chaleur.regler(moment);
     };
     $$('[data-moments] button').forEach((b) => b.addEventListener('click', () => {
       moment = b.dataset.moment; $$('[data-moments] button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); peindre();
@@ -226,6 +232,8 @@ const radar = (() => {
     preparer() {
       const sec = $('[data-radar-page]');
       r = new Radar($('.radar-scene', sec), { etiquette: $('[data-radar-heure]', sec), message: $('[data-radar-message]', sec) });
+      A.radarEcran($('.radar-scene', sec), { lieu: M.lieuMemorise() || M.releve.lieu });
+      V.averse($('[data-lire]'));
       regler(!calme());
       r.charger().then((ok) => {
         const n = r.images.length;
@@ -278,10 +286,12 @@ const vigilance = (() => ({
     $$('[data-vig-jours] button').forEach((b) => b.addEventListener('click', () => { montrer(b.dataset.jour, true); const u = new URL(location.href); u.searchParams.set('jour', b.dataset.jour); history.replaceState(null, '', u); }));
     const demande = new URLSearchParams(location.search).get('jour');
     if (demande === 'demain') montrer('demain', false);
-    E.vagueVigilance(svg);
+    A.encre(svg, { declencheur: carte });
+    V.survolVigilance(svg, carte.parentElement);
+    V.planches($('[data-planches]'));
     if (!calme()) {
-      gsap.fromTo('[data-crue-voile]', { scaleY: 1 }, { scaleY: 0, ease: 'none', scrollTrigger: { trigger: '.crue-bandeau', start: 'top 85%', end: 'center 40%', scrub: true } });
-      gsap.fromTo('.crue-photo img', { scale: 1.15 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.crue-bandeau', start: 'top bottom', end: 'bottom top', scrub: true } });
+      const voile = gsap.fromTo('[data-crue-voile]', { scaleY: 1 }, { scaleY: 0, ease: 'none', scrollTrigger: { trigger: '.crue-bandeau', start: 'top 85%', end: 'center 40%', scrub: true } });
+      V.crue($('.crue-photo'), $('[data-crue]')).then((ok) => { if (ok) { voile.scrollTrigger && voile.scrollTrigger.kill(); gsap.set('[data-crue-voile]', { scaleY: 0 }); } else gsap.fromTo('.crue-photo img', { scale: 1.15 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.crue-bandeau', start: 'top bottom', end: 'bottom top', scrub: true } }); });
     }
     if (M.vigilance && M.maintenantParis().date > M.vigilance.releve.slice(0, 10)) $$('[data-releve-passe]').forEach((e) => { e.hidden = false; });
   },
@@ -289,14 +299,19 @@ const vigilance = (() => ({
     montee(tl, '.nuancier-titre, .nuancier-resume, .nuancier-texte .actions', t - 0.1);
     const pleines = $$('.bande.est-pleine .bande-remplie');
     tl.fromTo($$('.bande'), { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.1 }, t - 0.3);
-    if (pleines.length) tl.fromTo(pleines, { scaleY: 0 }, { scaleY: 1, duration: 0.9, stagger: 0.45, ease: 'power3.inOut' }, t + 0.1);
+    if (pleines.length) tl.fromTo(pleines, { scaleY: 0 }, { scaleY: 1, duration: 1.1, stagger: 0.5, ease: 'power2.inOut' }, t + 0.1);
+    tl.add(() => $$('.bande.est-niveau').forEach((b) => b.classList.add('pulse')), t + 0.2 + pleines.length * 0.5 + 0.6);
   },
   arrivee() { const tl = gsap.timeline(); vigilance.intro(tl, 0.35); },
 }))();
 
 /* ========== Application ========== */
+let emergenceCtl = null;
 const application = (() => ({
   preparer() {
+    emergenceCtl = V.emergence($('[data-emergence]'));
+    V.telephoneFonctions($('[data-fonctions]'));
+    V.installation($('[data-installer]'));
     if (!calme()) {
       gsap.fromTo('[data-telephone-emergence]', { y: 0 }, { y: -90, ease: 'none', scrollTrigger: { trigger: '[data-emergence]', start: 'top top', end: 'bottom top', scrub: true } });
       gsap.fromTo('.emergence-fond img', { yPercent: 0 }, { yPercent: 10, ease: 'none', scrollTrigger: { trigger: '[data-emergence]', start: 'top top', end: 'bottom top', scrub: true } });
@@ -313,6 +328,7 @@ const application = (() => ({
   },
   intro(tl, t) {
     tl.fromTo('[data-telephone-emergence]', { yPercent: 70 }, { yPercent: 0, duration: 1.3, ease: 'power3.out' }, t - 0.4);
+    if (emergenceCtl) emergenceCtl.intro(tl, t);
     montee(tl, '.emergence-contenu > *', t - 0.1, { stagger: 0.08 });
   },
   arrivee() { const tl = gsap.timeline(); application.intro(tl, 0.45); },
@@ -325,6 +341,7 @@ const contact = (() => ({
     const img = $('img', ciel);
     if (!calme()) boucle(ciel, (dt, t) => { img.style.transform = `translate3d(0, ${(Math.sin(t * 0.5) * 10).toFixed(2)}px, 0) scale(1.06)`; });
     const f = $('[data-formulaire]'), ballon = $('[data-ballon]');
+    V.ballonFormulaire(f);
     f.addEventListener('submit', () => setTimeout(() => {
       const b = f.querySelector('[type="submit"]');
       if (!b.disabled || calme()) return;

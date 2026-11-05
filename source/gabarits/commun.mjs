@@ -117,9 +117,13 @@ function barre(c) {
 </div>`;
 }
 
-/* Voile « front » : un front froid (ligne à triangles des cartes météo) mène le voile, en haut à l'aller, en bas au retour. */
+/* Voile « front » : un front de nuages mène le voile, en haut à l'aller, en bas au retour. */
 function voile(c) {
-  const front = (sens) => brut(`<svg class="front front--${sens}" viewBox="0 0 1200 28" preserveAspectRatio="none" aria-hidden="true"><path d="M0 ${sens === 'haut' ? 26 : 2}H1200" stroke="#8cc0ff" stroke-width="3" fill="none"/>${Array.from({ length: 16 }, (_, i) => { const x = 37 + i * 75; return sens === 'haut' ? `<path d="M${x - 15} 26L${x} 4L${x + 15} 26Z" fill="#8cc0ff"/>` : `<path d="M${x - 15} 2L${x} 24L${x + 15} 2Z" fill="#8cc0ff"/>`; }).join('')}</svg>`);
+  const front = (sens) => {
+    const R = [46, 34, 58, 40, 64, 36, 52, 44, 60, 38, 56, 42, 62, 48, 36, 54, 40, 58];
+    const bulles = (dy, coul, k) => R.map((r, i) => { const x = i * 70 + (k ? 35 : 0), rr = r * (k ? 0.8 : 1); const cy = sens === 'haut' ? 90 - rr * 0.42 + dy : rr * 0.42 - dy; return `<circle cx="${x}" cy="${cy.toFixed(1)}" r="${rr.toFixed(1)}" fill="${coul}"/>`; }).join('');
+    return brut(`<svg class="front front--${sens}" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true">${bulles(-14, '#3f6fae', true)}${bulles(0, '#0d2f6d', false)}</svg>`);
+  };
   return html`<div data-voile data-effet="front" aria-hidden="true">${front('haut')}${front('bas')}<div class="voile-contenu"><img src="/assets/images/logo-clair.svg" alt="" width="56" height="56"><span data-voile-libelle>${c.libelle(c.page.cle)}</span></div></div>`;
 }
 
@@ -151,6 +155,7 @@ ${voile(c)}
 ${intro(c)}
 <a class="evitement" href="#contenu">${c.t('commun.evitement')}</a>
 ${entete(c)}
+<nav class="altimetre" data-altimetre aria-label="${c.s('commun.reperes')}" hidden></nav>
 <main id="contenu" tabindex="-1"${c.page.sansAction ? brut(' data-sans-action') : ''}${c.page.sansEffet ? brut(' data-sans-effet') : ''}>
 ${contenu}
 </main>

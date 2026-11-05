@@ -23,11 +23,11 @@ export default (c) => {
       <p class="actions" data-anime="gsap"><a class="bouton" href="#carte" data-action-principale data-survol="magnetique">${c.t('vigilance.page.voirCarte')}</a> <a class="bouton bouton--contour" href="https://vigilance.meteofrance.fr/fr" target="_blank" rel="noopener">${c.t('vigilance.officiel')}</a></p>
       <p class="note-demo" data-info-cle>${c.t('vigilance.releve', { date, heure })} <span data-releve-passe hidden>${c.t('vigilance.relevePasse')}</span></p>
     </div>
-    <div class="nuancier" data-nuancier data-effet="nuancier" data-rang="${rang}" role="img" aria-label="${c.s('vigilance.page.nuancierAria', { niveau: c.s('vigilance.bandeau.' + max) })}">
-      ${['jaune', 'orange', 'rouge'].map((n, i) => html`<div class="bande bande--${n}${i < rang ? ' est-pleine' : ''}"><span class="bande-remplie"></span><span class="bande-nom">${c.t('vigilance.niveau.' + n)}</span><span class="bande-sens">${c.t('vigilance.sens.' + n)}</span></div>`)}
+    <div class="nuancier" data-nuancier data-effet="nuancier" data-boucle-css data-rang="${rang}" role="img" aria-label="${c.s('vigilance.page.nuancierAria', { niveau: c.s('vigilance.bandeau.' + max) })}">
+      ${['jaune', 'orange', 'rouge'].map((n, i) => html`<div class="bande bande--${n}${i < rang ? ' est-pleine' : ''}${i === rang - 1 ? ' est-niveau' : ''}"><span class="bande-remplie"></span><span class="bande-nom">${c.t('vigilance.niveau.' + n)}</span><span class="bande-sens">${c.t('vigilance.sens.' + n)}</span></div>`)}
     </div>
   </div>
-  <div class="crue-bandeau" data-effet="crue-voile">
+  <div class="crue-bandeau" data-effet="crue-voile" data-crue>
     ${c.media({ nom: 'grok/crue', alt: c.s('vigilance.page.crueAlt'), cadrage: '50% 55%', classe: 'crue-photo', sizes: '100vw' })}
     <div class="crue-voile" data-crue-voile aria-hidden="true"></div>
   </div>
@@ -42,7 +42,7 @@ export default (c) => {
     </div>
   </div>
   <div class="vig-page-grille">
-    <div class="vig-carte" data-vig-carte data-effet="vague-vigilance" data-auj='${JSON.stringify(auj)}' data-dem='${JSON.stringify(dem)}'>${carteFrance(c, { niveaux: auj, classe: 'france--vigilance', aria: c.s('accueil.vigilance.carteAria') })}</div>
+    <div class="vig-carte" data-vig-carte data-effet="vague-vigilance" data-boucle-css data-auj='${JSON.stringify(auj)}' data-dem='${JSON.stringify(dem)}'>${carteFrance(c, { niveaux: auj, classe: 'france--vigilance', aria: c.s('accueil.vigilance.carteAria') })}</div>
     <div>
       <p class="vig-niveau vig-niveau--${max}" data-vig-max>${c.t('vigilance.bandeau.' + max)}</p>
       <ul class="vig-liste" data-vig-liste="aujourdhui" data-anime="cascade">${listeVigilance(c, 'aujourdhui')}</ul>
@@ -51,20 +51,23 @@ export default (c) => {
   </div>
 </section>
 
-<section class="couleurs conteneur" id="couleurs">
-  <div>
-    <p class="surtitre">${c.t('vigilance.page.couleursSurtitre')}</p>
-    <h2 data-anime="lignes">${c.t('vigilance.page.couleursTitre')}</h2>
-    <p class="couleur-vert" data-anime><span class="couleur-pastille" aria-hidden="true"></span>${c.t('vigilance.page.vert')}</p>
-    <h3>${c.t('vigilance.page.reflexesTitre')}</h3>
-    <ul class="reflexes" data-anime="cascade">
-      <li>${icone('alerte')}${c.t('vigilance.page.r1')}</li>
-      <li>${icone('goutte')}${c.t('vigilance.page.r2')}</li>
-      <li>${icone('cible')}${c.t('vigilance.page.r3')}</li>
-    </ul>
-    <p class="note-demo">${c.t('vigilance.page.source')}</p>
+<section class="couleurs conteneur" id="couleurs" data-planches>
+  <div class="couleurs-tete">
+    <div>
+      <p class="surtitre">${c.t('vigilance.page.couleursSurtitre')}</p>
+      <h2 data-anime="lignes">${c.t('vigilance.page.couleursTitre')}</h2>
+      <p class="couleur-vert" data-anime><span class="couleur-pastille" aria-hidden="true"></span>${c.t('vigilance.page.vert')}</p>
+      <p class="note-demo">${c.t('vigilance.page.source')}</p>
+    </div>
+    ${c.media({ nom: 'grok/bottes', alt: c.s('vigilance.page.bottesAlt'), cadrage: '30% 60%', classe: 'couleurs-photo', sizes: '(max-width: 860px) 100vw, 34vw', attrs: 'data-anime="rideau"' })}
   </div>
-  ${c.media({ nom: 'grok/bottes', alt: c.s('vigilance.page.bottesAlt'), cadrage: '30% 60%', classe: 'couleurs-photo', sizes: '(max-width: 860px) 100vw, 40vw', attrs: 'data-anime="rideau"' })}
+  <ol class="planches" data-effet="planches-empilees">
+    ${['jaune', 'orange', 'rouge'].map((n, i) => html`<li class="planche planche--${n}" data-planche style="--i:${i}">
+      <div class="planche-tete"><span class="planche-ico" aria-hidden="true">${icone('alerte')}</span><div><h3>${c.t('vigilance.planches.' + n + '.titre')}</h3><p class="planche-sens">${c.t('vigilance.sens.' + n)}</p></div></div>
+      <p class="planche-texte">${c.t('vigilance.planches.' + n + '.texte')}</p>
+      <ul class="planche-reflexes">${[1, 2, 3].map((k) => html`<li>${c.t('vigilance.planches.' + n + '.r' + k)}</li>`)}</ul>
+    </li>`)}
+  </ol>
 </section>
 `;
 };

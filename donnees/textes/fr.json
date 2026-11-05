@@ -27,7 +27,8 @@
     "evitement": "Aller au contenu",
     "mentionIa": "Illustration générée",
     "pause": "Pause",
-    "lecture": "Lecture"
+    "lecture": "Lecture",
+    "reperes": "Repères de la page"
   },
   "pages": {
     "accueil": {
@@ -132,10 +133,12 @@
     },
     "heures": {
       "surtitre": "Heure par heure",
-      "titre": "Les 24 prochaines heures",
-      "note": "Température et probabilité de pluie, heure par heure.",
+      "titre": "Les 24 prochaines heures, en accéléré",
+      "note": "Faites défiler : l'heure avance, le ciel passe du jour à la nuit. La courbe se lit aussi à la souris ou au doigt.",
       "indice": "Passez la souris ou le doigt sur la courbe pour lire chaque heure.",
-      "region": "Prévisions heure par heure, défilement horizontal"
+      "region": "Prévisions heure par heure, défilement horizontal",
+      "maintenant": "Maintenant",
+      "pluie": "pluie {pp} %"
     },
     "vigilance": {
       "surtitre": "Vigilance du jour",
@@ -157,7 +160,8 @@
       "secs": "Jours secs",
       "pluie": "Jours de pluie",
       "region": "Prévisions sur 16 jours, défilement horizontal",
-      "note": "Matin : 9 h · après-midi : 15 h. La barre situe la minimale et la maximale du jour sur l'échelle des seize jours."
+      "note": "Matin : 9 h · après-midi : 15 h. La barre situe la minimale et la maximale du jour sur l'échelle des seize jours.",
+      "bandes": "Ruban des seize jours, coloré par la température : touchez un jour pour le voir en détail"
     },
     "villes": {
       "surtitre": "Grandes villes",
@@ -196,7 +200,11 @@
       "ign": "Contours des départements",
       "alt": "Ballon-sonde blanc qui s'élève dans le ciel de l'aube",
       "bouton": "Voir ma commune",
-      "radar": "Le radar"
+      "radar": "Le radar",
+      "altitude": "Altitude",
+      "temperature": "Température",
+      "pression": "Pression",
+      "sondeTexte": "Comme un ballon-sonde, qui mesure l'air jusqu'à 30 km d'altitude : la température y descend vers −56 °C et la pression sous 12 hPa, avant que le ballon éclate et redescende en parachute."
     }
   },
   "vigilance": {
@@ -243,6 +251,29 @@
       "source": "La vigilance est produite par Météo-France. MétéoFR la reprend et renvoie vers le site officiel pour les consignes détaillées.",
       "bottesAlt": "Bottes en caoutchouc et parapluie sur un seuil, sous la pluie",
       "vert": "Vert : pas de vigilance particulière. Jaune, orange et rouge sont détaillés en haut de page."
+    },
+    "planches": {
+      "jaune": {
+        "titre": "Vigilance jaune",
+        "texte": "Des phénomènes habituels dans la région, mais qui peuvent ponctuellement devenir dangereux : forte averse, coup de vent, orage isolé.",
+        "r1": "Restez informé de l'évolution du temps.",
+        "r2": "Reportez les activités exposées si le ciel se gâte : randonnée, mer, bord de rivière.",
+        "r3": "Fixez ou rentrez ce que le vent peut emporter."
+      },
+      "orange": {
+        "titre": "Vigilance orange",
+        "texte": "Des phénomènes dangereux sont prévus. Ils peuvent toucher les déplacements, les biens et les personnes.",
+        "r1": "Limitez vos déplacements et renseignez-vous avant de prendre la route.",
+        "r2": "Ne vous engagez jamais sur une route inondée, à pied comme en voiture.",
+        "r3": "Suivez les consignes des autorités et de Météo-France."
+      },
+      "rouge": {
+        "titre": "Vigilance rouge",
+        "texte": "Des phénomènes dangereux d'une intensité exceptionnelle sont prévus.",
+        "r1": "Évitez tout déplacement.",
+        "r2": "Mettez-vous à l'abri et appliquez strictement les consignes des autorités.",
+        "r3": "Gardez un téléphone chargé et une radio à portée de main."
+      }
     }
   },
   "radar": {
@@ -280,7 +311,9 @@
       "c2t": "Regardez le mouvement.",
       "c2": "Faites défiler les images : la pluie avance presque toujours dans le sens du vent.",
       "c3t": "Le radar montre le passé.",
-      "c3": "Pour la suite, l'heure par heure de votre commune prend le relais."
+      "c3": "Pour la suite, l'heure par heure de votre commune prend le relais.",
+      "ilya": "il y a 2 h",
+      "moderee": "Modérée"
     },
     "faq": {
       "surtitre": "Questions",
@@ -310,7 +343,8 @@
     "indiceSouris": "Passez la souris sur la vitre pour essuyer la buée",
     "indiceDoigt": "Glissez le doigt sur la vitre pour essuyer la buée",
     "heures": {
-      "titre": "Les 24 prochaines heures"
+      "titre": "Les 24 prochaines heures",
+      "note": "Température et probabilité de pluie, heure par heure."
     },
     "jours": {
       "titre": "Seize jours, du matin à l'après-midi",
@@ -330,7 +364,8 @@
       "duree": "{h} h {m} de jour",
       "lever": "Lever",
       "coucher": "Coucher",
-      "alt": "Ciel orangé après le coucher du soleil"
+      "alt": "Ciel orangé après le coucher du soleil",
+      "maintenant": "maintenant"
     },
     "vigilance": {
       "surtitre": "Vigilance",
@@ -376,7 +411,8 @@
       "e4t": "Lancer MétéoFR",
       "e4": "Ouvrez l'appli et cherchez votre commune.",
       "note": "Version, taille et empreinte du fichier : à compléter par MétéoFR.",
-      "alt": "Téléphone posé sur une table, près d'une fenêtre mouillée"
+      "alt": "Téléphone posé sur une table, près d'une fenêtre mouillée",
+      "pret": "MétéoFR est prêt"
     },
     "faq": {
       "surtitre": "Questions",
@@ -420,6 +456,8 @@
       "erreurT": "Signaler une erreur",
       "erreur": "Indiquez la commune, le jour et l'heure de la prévision concernée."
     },
-    "ecrire": "Écrire le message"
+    "ecrire": "Écrire le message",
+    "etape2": "Vos coordonnées",
+    "etape3": "Votre message"
   }
 }

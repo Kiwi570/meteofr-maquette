@@ -7,7 +7,7 @@
    Règles tenues : densité de pixels limitée (1,25 sur ordinateur, 1 sur téléphone), rendu seulement à l'écran,
    onglet visible et hors mode calme (boucle du socle), aucun rendu quand rien ne bouge, 3 lectures de texture par pixel,
    image d'origine gardée dessous (repli sans WebGL ou si le contexte est perdu), 6 images au plus par page. */
-import { boucle } from './boucles.js?v=1';
+import { boucle } from './boucles.js?v=2';
 
 const VS = 'attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0.,1.);}';
 const FS = `precision mediump float;

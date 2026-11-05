@@ -1,9 +1,9 @@
 /* Effets propres à MétéoFR (plan d'animation) : chacun porte data-effet="nom" dans la page.
    Tous respectent le mode calme (état final direct) et ne lisent la mise en page qu'au chargement et au redimensionnement. */
-import { boucle, etat as socle, partir } from './socle/index.js?v=1';
-import { chercherCommunes, direction, lienCommune, memoriserLieu, deg } from './meteo.js?v=1';
-import { courbeSVG } from './rendu.js?v=1';
-import { CielVivant } from './ciel.js?v=1';
+import { boucle, etat as socle, partir } from './socle/index.js?v=2';
+import { chercherCommunes, direction, lienCommune, memoriserLieu, deg } from './meteo.js?v=2';
+import { courbeSVG } from './rendu.js?v=2';
+import { CielVivant } from './ciel.js?v=2';
 
 const gsap = () => window.gsap;
 const ST = () => window.ScrollTrigger;
@@ -115,7 +115,14 @@ export function courbe(bloc) {
     if (!rect) rect = svg.getBoundingClientRect();
     const vx = (clientX - rect.left) / rect.width * geo.W;
     const i = Math.max(0, Math.min(heures.length - 1, Math.round((vx - 24) / ((geo.W - 48) / (heures.length - 1)))));
-    const h = heures[i];
+    afficher(i);
+    bloc.dispatchEvent(new CustomEvent('courbe:heure', { detail: i, bubbles: true }));
+  };
+  const afficher = (i) => {
+    if (!heures || !geo) return;
+    const svg = bloc.querySelector('svg');
+    if (!rect) rect = svg.getBoundingClientRect();
+    const h = heures[i]; if (!h) return;
     bloc.classList.add('lit');
     const ligne = svg.querySelector('.courbe-curseur');
     ligne.setAttribute('x1', geo.x(i)); ligne.setAttribute('x2', geo.x(i));
@@ -126,9 +133,10 @@ export function courbe(bloc) {
   bloc.addEventListener('pointerenter', () => { rect = null; });
   bloc.addEventListener('pointermove', (e) => lire(e.clientX));
   bloc.addEventListener('pointerdown', (e) => { rect = null; lire(e.clientX); });
-  bloc.addEventListener('pointerleave', () => bloc.classList.remove('lit'));
+  bloc.addEventListener('pointerleave', () => { if (!bloc.hasAttribute('data-suivi')) bloc.classList.remove('lit'); });
   window.addEventListener('scroll', () => { rect = null; }, { passive: true });
   return {
+    montrer(i) { rect = null; bloc.setAttribute('data-suivi', ''); afficher(i); },
     regler(h) {
       heures = h.slice(0, 25);
       const r = courbeSVG(heures);
@@ -226,7 +234,7 @@ export function isobares(el) {
 }
 
 /* ---------- 404 : brouillard qui se dissipe sous le doigt ou la souris, puis se reforme ---------- */
-export function brouillard(cv) {
+export function brouillard(cv, { apres } = {}) {
   if (!cv) return;
   const ctx = cv.getContext('2d');
   let w = 0, h = 0;
@@ -245,6 +253,7 @@ export function brouillard(cv) {
       ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
     }
     ctx.fillStyle = 'rgba(240,243,246,.45)'; ctx.fillRect(0, 0, w, h);
+    if (apres) apres(ctx, w, h);
     ctx.globalCompositeOperation = 'destination-out'; ctx.drawImage(masque, 0, 0); ctx.globalCompositeOperation = 'source-over';
     mc.globalCompositeOperation = 'destination-out'; mc.fillStyle = 'rgba(0,0,0,.02)'; mc.fillRect(0, 0, w, h); mc.globalCompositeOperation = 'source-over';
   };

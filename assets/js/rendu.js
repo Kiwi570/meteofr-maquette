@@ -1,5 +1,5 @@
 /* Rendu des composants avec les données en direct : même balisage que la génération (source/gabarits/meteo.mjs). */
-import { deg, heureFr, jourCourt, libelle, icone, svgIcone, teinte } from './meteo.js?v=1';
+import { deg, heureFr, jourCourt, libelle, icone, svgIcone, teinte } from './meteo.js?v=2';
 
 export function courbeSVG(heures) {
   const W = 1000, H = 260, X0 = 24, X1 = W - 24, Y0 = 34, Y1 = 196;
@@ -25,6 +25,13 @@ export function semainierHTML(jours) {
     <p class="jour-minmax"><span>${deg(j.tmin)}</span> <span>${deg(j.tmax)}</span></p>
     <p class="jour-pluie">${svgIcone('goutte', 'ico ico--mini')}${String(j.pluie).replace('.', ',')} mm</p>
   </li>`).join('');
+}
+
+export function bandesHTML(jours) {
+  return jours.map((j, i) => {
+    const moy = (j.tmin + j.tmax) / 2, pluie = j.pluie >= 1;
+    return `<li class="bande-j${pluie ? ' bande-j--pluie' : ''}${moy < 2 ? ' bande-j--froid' : ''}" style="--teinte:${teinte(moy)}"><button type="button" data-jour-i="${i}" aria-label="${jourCourt(j.date, i)}\u00a0: de ${deg(j.tmin)} à ${deg(j.tmax)}${pluie ? `, ${String(j.pluie).replace('.', ',')} mm` : ''}"><span class="bj-nom" aria-hidden="true">${jourCourt(j.date, i)}</span><span class="bj-t" aria-hidden="true">${deg(j.tmax)}</span>${pluie ? '<span class="bj-gouttes" aria-hidden="true"><i></i><i></i><i></i></span>' : ''}</button></li>`;
+  }).join('');
 }
 
 export function majTexte(maj, direct) {

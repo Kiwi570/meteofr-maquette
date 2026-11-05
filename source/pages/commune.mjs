@@ -16,7 +16,7 @@ export default (c) => {
   const [lh, lm] = j0.lever.split(':').map(Number), [ch, cm] = j0.coucher.split(':').map(Number);
   const duree = (ch * 60 + cm) - (lh * 60 + lm);
   return html`
-<section class="vitre-page" id="debut" data-commune>
+<section class="vitre-page" id="debut" data-rail="Ma commune" data-commune>
   <div class="conteneur vitre-grille">
     <div class="vitre-texte">
       <p class="surtitre"><span class="pastille-direct" aria-hidden="true"></span>${c.t('commune.surtitre')} · <span data-m="dep">${c.t('commune.departement', { dep: r.lieu.dep })}</span></p>
@@ -35,45 +35,45 @@ export default (c) => {
         <ul class="favoris-liste" data-favoris aria-label="${c.s('commune.favorisListe')}"></ul>
       </div>
     </div>
-    <figure class="vitre" data-vitre data-effet="vitre">
+    <figure class="vitre" data-vitre data-effet="vitre" data-boucle-css>
       <div class="pluie" data-pluie>
         <div class="pluie__fond">${c.media({ nom: `grok/ciel-${etat}`, alt: c.s('commune.vitreAlt'), cadrage: '50% 60%', priorite: true, classe: 'vitre-photo', sizes: '(max-width: 860px) 100vw, 46vw' })}</div>
         <canvas class="pluie__canvas" aria-hidden="true"></canvas>
         <div class="pluie__fige" aria-hidden="true"></div>
         <div class="vitre-givre" aria-hidden="true"></div>
+        <div class="vitre-reflet" aria-hidden="true"></div>
       </div>
-      <span class="vitre-montant" aria-hidden="true"></span><span class="vitre-traverse" aria-hidden="true"></span>
       <figcaption class="vitre-indice"><span class="indice-souris">${c.t('commune.indiceSouris')}</span><span class="indice-doigt">${c.t('commune.indiceDoigt')}</span></figcaption>
     </figure>
   </div>
 </section>
 
-<section class="heures heures--commune" id="heures">
+<section class="heures heures--commune" id="heures" data-rail="24 heures">
   <div class="conteneur">
     <div class="tete-section tete-section--ligne">
       <div><p class="surtitre">${c.t('accueil.heures.surtitre')}</p><h2 data-anime="lignes">${c.t('commune.heures.titre')}</h2></div>
-      <p class="tete-note">${c.t('accueil.heures.note')}</p>
+      <p class="tete-note">${c.t('commune.heures.note')}</p>
     </div>
     <div class="courbe" data-courbe data-effet="courbe-24h" tabindex="0" role="region" aria-label="${c.s('composants.courbeAria')}">${courbe(c, r.heures)}<p class="courbe-bulle" data-courbe-bulle aria-hidden="true"></p><p class="courbe-indice">${c.t('accueil.heures.indice')}</p></div>
     <div class="defile" tabindex="0" role="region" aria-label="${c.s('accueil.heures.region')}"><ul class="heures-liste" data-heures data-anime="cascade">${listeHeures(c, r.heures)}</ul></div>
   </div>
 </section>
 
-<section class="seize conteneur" id="jours">
+<section class="seize conteneur" id="jours" data-rail="16 jours">
   <div class="tete-section tete-section--ligne">
     <div><p class="surtitre">${c.t('accueil.jours.surtitre')}</p><h2 data-anime="lignes">${c.t('commune.jours.titre')}</h2></div>
     <p class="tete-note">${c.t('commune.jours.note')}</p>
   </div>
-  <ol class="seize-liste" data-seize data-effet="thermo-rail" data-visuel style="--tmin:${tmin};--tmax:${tmax}">${r.jours.map((j, i) => html`<li class="seize-jour">
+  <ol class="seize-liste" data-seize data-effet="thermo-rail" data-visuel data-boucle-css style="--tmin:${tmin};--tmax:${tmax}">${r.jours.map((j, i) => html`<li class="seize-jour${i === 0 ? ' seize-jour--auj' : ''}${j.pluie >= 1 ? ' seize-jour--pluie' : ''}">
     <p class="seize-date">${jourCourt(j.date, i)}</p>
     <p class="seize-moment">${j.matin ? html`${ico(c, j.matin[1], 1)}<span class="visuellement-cache">${c.t('composants.matin')} </span><span>${deg(j.matin[0])}</span>` : html`<span>${c.t('composants.nonDisponible')}</span>`}</p>
     <p class="seize-moment">${j.aprem ? html`${ico(c, j.aprem[1], 1)}<span class="visuellement-cache">${c.t('composants.aprem')} </span><span>${deg(j.aprem[0])}</span>` : html`<span>${c.t('composants.nonDisponible')}</span>`}</p>
     <div class="seize-barre" role="img" style="--bas:${j.tmin};--haut:${j.tmax}" aria-label="${c.s('composants.minmax', { min: deg(j.tmin), max: deg(j.tmax) })}"><span class="seize-min">${deg(j.tmin)}</span><span class="seize-piste"><i data-rail></i></span><span class="seize-max">${deg(j.tmax)}</span></div>
-    <p class="seize-pluie">${icone('goutte', 'ico ico--mini')}${String(j.pluie).replace('.', ',')} mm</p>
+    <p class="seize-pluie">${j.pluie >= 1 ? brut('<span class="seize-gouttes" aria-hidden="true"><i></i><i></i></span>') : ''}${icone('goutte', 'ico ico--mini')}${String(j.pluie).replace('.', ',')} mm</p>
   </li>`)}</ol>
 </section>
 
-<section class="vent conteneur" id="vent">
+<section class="vent conteneur" id="vent" data-rail="Vent">
   <div class="vent-rose" data-effet="rose-des-vents">
     <svg viewBox="0 0 300 300" aria-hidden="true" data-rose>
       <circle class="rose-anneau" cx="150" cy="150" r="128"/><circle class="rose-anneau rose-anneau--fin" cx="150" cy="150" r="92"/><circle class="rose-anneau rose-anneau--fin" cx="150" cy="150" r="56"/>
@@ -93,11 +93,13 @@ export default (c) => {
     <p class="tete-note">${c.t('commune.vent.note')}</p>
     <ol class="rafales" data-rafales aria-label="${c.s('commune.vent.rafalesAria')}">${r.heures.slice(0, 12).map((h) => html`<li style="--r:${Math.min(1, (h.raf || 0) / 60)}"><i></i><span>${+h.h} h</span></li>`)}</ol>
   </div>
-  ${c.media({ nom: 'grok/vent-herbes', alt: c.s('commune.vent.alt'), cadrage: '30% 60%', classe: 'vent-photo', sizes: '(max-width: 860px) 100vw, 30vw', attrs: 'data-fx="parallaxe"' })}
+  ${c.media({ nom: 'grok/vent-herbes', alt: c.s('commune.vent.alt'), cadrage: '30% 60%', classe: 'vent-photo', sizes: '(max-width: 860px) 100vw, 30vw', attrs: 'data-effet="herbes-au-vent"' })}
 </section>
 
-<section class="soleil" id="soleil">
+<section class="soleil" id="soleil" data-rail="Soleil" data-soleil>
   ${c.media({ nom: 'grok/ciel-crepuscule', alt: c.s('commune.soleil.alt'), cadrage: '50% 70%', classe: 'soleil-fond', sizes: '100vw', attrs: 'data-fx="zoom"' })}
+  <div class="soleil-ciel" data-soleil-ciel data-effet="coucher-de-soleil" aria-hidden="true"></div>
+  <div class="soleil-etoiles" data-soleil-etoiles aria-hidden="true"></div>
   <div class="conteneur soleil-contenu">
     <div class="soleil-texte">
       <p class="surtitre surtitre--clair">${c.t('commune.soleil.surtitre')}</p>
@@ -108,14 +110,16 @@ export default (c) => {
       <svg viewBox="0 0 600 300" aria-hidden="true">
         <path class="arc-horizon" d="M20 260 H580"/>
         <path class="arc-trajet" d="M60 260 A240 220 0 0 1 540 260" fill="none"/>
+        <g class="arc-maintenant" data-arc-maintenant><circle r="5"/><text y="-14" text-anchor="middle">${c.t('commune.soleil.maintenant')}</text></g>
         <circle class="arc-soleil" data-arc-soleil cx="60" cy="260" r="14"/>
       </svg>
+      <p class="arc-heure" data-arc-heure aria-hidden="true">${heureFr(j0.lever)}</p>
       <figcaption><span>${c.t('commune.soleil.lever')} <strong data-m="lever">${heureFr(j0.lever)}</strong></span><span>${c.t('commune.soleil.coucher')} <strong data-m="coucher">${heureFr(j0.coucher)}</strong></span></figcaption>
     </figure>
   </div>
 </section>
 
-<section class="vig-locale conteneur" id="vigilance">
+<section class="vig-locale conteneur" id="vigilance" data-rail="Vigilance">
   <div class="vig-zoom" data-effet="zoom-departement">${carteFrance(c, { niveaux, classe: 'france--locale', aria: c.s('commune.vigilance.carteAria') })}</div>
   <div class="vig-texte">
     <p class="surtitre">${c.t('commune.vigilance.surtitre')}</p>

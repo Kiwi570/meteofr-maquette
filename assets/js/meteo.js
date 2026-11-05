@@ -52,6 +52,36 @@ export function hauteurSoleil(date, lat, lon) {
   return Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(H)) / RAD;
 }
 
+/* Position du soleil et de la lune (méthode SunCalc) : hauteur et azimut en degrés, azimut compté depuis le sud, positif vers l'ouest. */
+const OBL = RAD * 23.4397;
+const ad = (l, b) => Math.atan2(Math.sin(l) * Math.cos(OBL) - Math.tan(b) * Math.sin(OBL), Math.cos(l));
+const dec = (l, b) => Math.asin(Math.sin(b) * Math.cos(OBL) + Math.cos(b) * Math.sin(OBL) * Math.sin(l));
+function horizon(d, lat, lon, ra, de) {
+  const H = RAD * (280.16 + 360.9856235 * d) + lon * RAD - ra, phi = lat * RAD;
+  return {
+    alt: Math.asin(Math.sin(phi) * Math.sin(de) + Math.cos(phi) * Math.cos(de) * Math.cos(H)) / RAD,
+    az: Math.atan2(Math.sin(H), Math.cos(H) * Math.sin(phi) - Math.tan(de) * Math.cos(phi)) / RAD,
+  };
+}
+export function positionSoleil(date, lat, lon) {
+  const d = jours(date);
+  const M = RAD * (357.5291 + 0.98560028 * d);
+  const L = M + RAD * (1.9148 * Math.sin(M) + 0.02 * Math.sin(2 * M) + 0.0003 * Math.sin(3 * M)) + RAD * 102.9372 + Math.PI;
+  return horizon(d, lat, lon, ad(L, 0), dec(L, 0));
+}
+export function positionLune(date, lat, lon) {
+  const d = jours(date);
+  const L = RAD * (218.316 + 13.176396 * d), Mm = RAD * (134.963 + 13.064993 * d), F = RAD * (93.272 + 13.22935 * d);
+  const l = L + RAD * 6.289 * Math.sin(Mm), b = RAD * 5.128 * Math.sin(F);
+  return horizon(d, lat, lon, ad(l, b), dec(l, b));
+}
+/* Position d'un lieu sur une carte des départements (même projection que france.json, lue sur le SVG). */
+export function surCarte(svg, lat, lon) {
+  const [ox, oy] = (svg.dataset.origine || '0,0').split(',').map(Number), z = +svg.dataset.zoom || 5;
+  const Mz = 256 * 2 ** z, s = Math.sin(lat * RAD);
+  return [(lon + 180) / 360 * Mz - ox, (0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * Mz - oy];
+}
+
 /* ---------- Modèle commun (relevé figé ou données en direct) ---------- */
 export function depuisReleve() {
   const r = DONNEES.releve;

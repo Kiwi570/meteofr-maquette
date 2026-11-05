@@ -5,7 +5,7 @@
 // « réduire les animations » : image avec quelques gouttes figées en SVG ; sans JavaScript : image seule.
 // Adapté du module « pluie-sur-vitre » de la bibliothèque (shader, essuyage, éclaircie, repli figé repris tels quels) :
 // seul le raccord au socle de la maquette change (mode calme, boucles qui s'arrêtent hors écran, OGL chargé à la demande).
-import { boucle as boucleSocle, etat as etatSocle } from './socle/index.js?v=1';
+import { boucle as boucleSocle, etat as etatSocle } from './socle/index.js?v=2';
 let chargementOgl = null;
 const chargerOgl = () => (chargementOgl ??= new Promise((ok) => { if (window.OGL) return ok(); const s = document.createElement('script'); s.src = '/assets/vendor/ogl.min.js'; s.onload = ok; s.onerror = ok; document.head.appendChild(s); }));
 const S = {

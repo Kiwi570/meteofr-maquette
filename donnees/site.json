@@ -2,7 +2,7 @@
   "nom": "MétéoFR",
   "adresse": "https://meteofr-maquette.vercel.app",
   "siteActuel": "meteofr.lovable.app",
-  "version": 1,
+  "version": 2,
   "langues": [
     "fr"
   ],
